@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private Pane root;
+    private Stage stage;
 
     private Parent createMainMenuContent() {
         root = new Pane();
@@ -49,21 +50,40 @@ public class Main extends Application {
         return root;
     }
 
+    private Parent createGameContent() {
+        root = new Pane();
+        root.setPrefSize(600, 900);
+
+        return root;
+    }
+
+    private Parent createLeaderBoardContent() {
+        root = new Pane();
+        root.setPrefSize(600, 900);
+
+        Label label = new Label("Leader Board");
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
+        label.setTranslateY(100);
+
+        Button mainMenuBtn = new Button("Main Menu");
+
+        root.getChildren().addAll(label, mainMenuBtn);
+
+        MainMenuBtnHandlerClass mainMenuBtnHandler = new MainMenuBtnHandlerClass();
+        mainMenuBtn.setOnAction(mainMenuBtnHandler);
+
+        return root;
+    }
+
     @Override
     public void start(Stage stage) throws Exception{
 
+        this.stage = stage;
 
-        stage.setScene(new Scene(createMainMenuContent()));
-        stage.show();
-
+        this.stage.setScene(new Scene(createMainMenuContent()));
+        this.stage.show();
 
     }
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-}
 
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
@@ -82,6 +102,22 @@ public class Main extends Application {
     class LeaderBoardBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
-            System.out.println("Leader board button clicked");
+            createLeaderBoardContent();
+            stage.setScene(new Scene(createLeaderBoardContent()));
+            stage.show();
         }
     }
+
+    class MainMenuBtnHandlerClass implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent e) {
+            createMainMenuContent();
+            stage.setScene(new Scene(createMainMenuContent()));
+            stage.show();
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
