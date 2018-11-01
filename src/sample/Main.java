@@ -3,12 +3,14 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -54,7 +56,37 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(600, 900);
 
+//        Button startAgainBtn = new Button("Start Again");
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll("Options:","Start Again", "Exit to Main Menu");
+        choiceBox.setValue("Options:");
+
+        Button choiceConfirmBtn = new Button("Confirm");
+
+        choiceConfirmBtn.setOnAction(e -> getChoice(choiceBox));
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20,20,20,20));
+        layout.getChildren().addAll(choiceBox, choiceConfirmBtn);
+
+        root.getChildren().addAll(layout);
+
         return root;
+    }
+
+    private void getChoice(ChoiceBox<String> choiceBox) {
+        String option = choiceBox.getValue();
+        if (option.equals("Start Again")) {
+            createGameContent();
+            stage.setScene(new Scene(createGameContent()));
+            stage.show();
+        }
+
+        else if (option.equals("Exit to Main Menu")) {
+            createMainMenuContent();
+            stage.setScene(new Scene(createMainMenuContent()));
+            stage.show();
+        }
     }
 
     private Parent createLeaderBoardContent() {
@@ -76,7 +108,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stage){
 
         this.stage = stage;
 
@@ -88,7 +120,9 @@ public class Main extends Application {
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
-            System.out.println("Start button clicked");
+            createGameContent();
+            stage.setScene(new Scene(createGameContent()));
+            stage.show();
         }
     }
 
