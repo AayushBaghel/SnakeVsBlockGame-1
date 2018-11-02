@@ -11,12 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -26,6 +28,7 @@ public class Main extends Application{
 
     private Pane root;
     private Stage stage;
+    private Scene scene;
     private Snake snake;
 
     private Parent createMainMenuContent() {
@@ -171,17 +174,19 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage){
-        Scene scene = new Scene(createMainMenuContent());
+        scene = new Scene(createMainMenuContent());
 
         this.stage = stage;
 
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.A) {
-                snake.moveLeft();
-            } else if (e.getCode() == KeyCode.D) {
-                snake.moveRight();
-            }
-        });
+//        scene.setOnKeyPressed(e -> {
+//            if (e.getCode() == KeyCode.A) {
+//                snake.moveLeft();
+//            } else if (e.getCode() == KeyCode.D) {
+//                snake.moveRight();
+//            }
+//        });
+
+
 
         this.stage.setScene(scene);
 
@@ -193,8 +198,16 @@ public class Main extends Application{
         @Override
         public void handle(ActionEvent e) {
             createGameContent();
-            stage.setScene(new Scene(createGameContent()));
+            scene = new Scene(createGameContent());
+            stage.setScene(scene);
             stage.show();
+
+            scene.setOnKeyPressed(event -> {
+                switch(event.getCode()) {
+                    case LEFT: snake.moveLeft(); break;
+                    case RIGHT: snake.moveRight(); break;
+                }
+            });
         }
     }
 
