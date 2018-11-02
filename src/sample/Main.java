@@ -22,6 +22,7 @@ public class Main extends Application{
     private Parent createMainMenuContent() {
         root = new Pane();
         root.setPrefSize(600, 900);
+        root.setStyle("-fx-background-color: #7851A9;");
 
         Label label = new Label("Snake Vs Block");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
@@ -56,6 +57,7 @@ public class Main extends Application{
     private Parent createGameContent() {
         root = new Pane();
         root.setPrefSize(600, 900);
+        root.setStyle("-fx-background-color: #7851A9;");
 
         // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -79,10 +81,38 @@ public class Main extends Application{
         snake.getSnakeBody().get(0).layoutXProperty().bind(root.widthProperty().subtract(snake.getSnakeBody().get(0).radiusProperty()).divide(2));
         snake.getSnakeBody().get(0).setTranslateY(450);
 
+        // Ball
+        Ball ball = new Ball();
+        ball.getBody().setTranslateX(50);
+        ball.getBody().setTranslateY(50);
+
+        // Block
+        Block block = new Block();
+        block.getBody().setTranslateX(80);
+        block.getBody().setTranslateY(250);
+
+        // Destroy Block
+        DestroyBlock dblock = new DestroyBlock();
+        dblock.getBody().setTranslateX(50);
+        dblock.getBody().setTranslateY(500);
+
+        // Magnet
+        Magnet magnet = new Magnet();
+        magnet.getBody().setTranslateX(100);
+        magnet.getBody().setTranslateY(100);
+
+        // Shield
+        Shield shield = new Shield();
+        shield.getBody().setTranslateX(100);
+        shield.getBody().setTranslateY(200);
+
+        // Wall
+        Wall wall = new Wall();
+        shield.getBody().setTranslateX(100);
+        shield.getBody().setTranslateY(300);
 
 
-
-        root.getChildren().addAll(layout, snake.getSnakeBody().get(0));
+        root.getChildren().addAll(layout, snake.getSnakeBody().get(0), ball.getBody(), block.getBody(), dblock.getBody(), magnet.getBody(), shield.getBody(), wall.getBody());
 
         return root;
     }
@@ -105,6 +135,7 @@ public class Main extends Application{
     private Parent createLeaderBoardContent() {
         root = new Pane();
         root.setPrefSize(600, 900);
+        root.setStyle("-fx-background-color: #7851A9;");
 
         Label label = new Label("Leader Board");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));

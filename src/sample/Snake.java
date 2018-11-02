@@ -16,7 +16,7 @@ public class Snake {
 
     Snake() {
         snakeBody = new ArrayList<>();
-        snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
+        snakeBody.add(new Circle(15, Paint.valueOf("BLUE")));
     }
 
     boolean encounterBlock(Block block) {return true;}
