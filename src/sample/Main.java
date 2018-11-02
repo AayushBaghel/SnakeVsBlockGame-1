@@ -13,10 +13,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Application{
 
     private Pane root;
     private Stage stage;
+    private Snake snake;
 
     private Parent createMainMenuContent() {
         root = new Pane();
@@ -56,7 +57,7 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(600, 900);
 
-//        Button startAgainBtn = new Button("Start Again");
+        // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll("Options:","Start Again", "Exit to Main Menu");
         choiceBox.setValue("Options:");
@@ -69,7 +70,19 @@ public class Main extends Application {
         layout.setPadding(new Insets(20,20,20,20));
         layout.getChildren().addAll(choiceBox, choiceConfirmBtn);
 
-        root.getChildren().addAll(layout);
+        // Game
+
+        // Snake code
+        snake = new Snake();
+
+        // Setting snake head location
+        snake.getSnakeBody().get(0).layoutXProperty().bind(root.widthProperty().subtract(snake.getSnakeBody().get(0).radiusProperty()).divide(2));
+        snake.getSnakeBody().get(0).setTranslateY(450);
+
+
+
+
+        root.getChildren().addAll(layout, snake.getSnakeBody().get(0));
 
         return root;
     }

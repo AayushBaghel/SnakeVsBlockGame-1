@@ -1,11 +1,23 @@
 package sample;
 
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Snake {
     private int length;
     private boolean alive = true;
     private Point2D velocity;
+
+    private List<Circle> snakeBody;
+
+    Snake() {
+        snakeBody = new ArrayList<>();
+        snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
+    }
 
     boolean encounterBlock(Block block) {return true;}
 
@@ -35,5 +47,9 @@ public class Snake {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public List<Circle> getSnakeBody() {
+        return snakeBody;
     }
 }
