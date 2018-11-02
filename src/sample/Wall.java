@@ -9,7 +9,7 @@ public class Wall {
     private int length;
     private Point2D velocity;
 
-    private Rectangle body = new Rectangle(3, 10, Color.WHITE);
+    private Rectangle body = new Rectangle(5, 200, Color.WHITE);
 
     public int getLength() {
         return length;
@@ -17,6 +17,10 @@ public class Wall {
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
     }
 
     public Rectangle getBody() {

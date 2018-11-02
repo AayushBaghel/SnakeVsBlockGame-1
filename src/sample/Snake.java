@@ -16,7 +16,7 @@ public class Snake {
 
     Snake() {
         snakeBody = new ArrayList<>();
-        snakeBody.add(new Circle(15, Paint.valueOf("BLUE")));
+        snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
     }
 
     boolean encounterBlock(Block block) {return true;}
@@ -29,9 +29,19 @@ public class Snake {
 
     boolean encounterMagnet(Magnet magnet) {return true;}
 
-    void moveLeft() {}
+    void moveLeft() {
+        for (Circle c: snakeBody
+             ) {
+            c.setTranslateX(c.getTranslateX() -5);
+        }
+    }
 
-    void moveRight() {}
+    void moveRight() {
+        for (Circle c: snakeBody
+             ) {
+            c.setTranslateX(c.getTranslateX() + 5);
+        }
+    }
 
     public void setLength(int length) {
         this.length = length;

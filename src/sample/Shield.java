@@ -11,7 +11,7 @@ public class Shield {
     private Point2D velocity;
     private boolean alive = true;
 
-    private Rectangle body = new Rectangle(5, 10, Color.BLUE);
+    private Rectangle body = new Rectangle(10, 20, Color.BLUE);
 
     public boolean isAlive() {
         return alive;
@@ -19,6 +19,10 @@ public class Shield {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
     }
 
     public Rectangle getBody() {

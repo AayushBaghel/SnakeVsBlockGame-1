@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,9 +10,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.awt.geom.Point2D;
 
 public class Main extends Application{
 
@@ -72,47 +81,56 @@ public class Main extends Application{
         layout.setPadding(new Insets(20,20,20,20));
         layout.getChildren().addAll(choiceBox, choiceConfirmBtn);
 
+        Rectangle topBar = new Rectangle(600, 120);
+        Stop[] stops = new Stop[] { new Stop(0, Color.web("#190236")), new Stop(1, Color.web("#7851A9"))};
+        LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+
+        topBar.setFill(lg1);
+
+        topBar.setTranslateX(0);
+        topBar.setTranslateY(0);
+
         // Game
 
         // Snake code
         snake = new Snake();
 
         // Setting snake head location
-        snake.getSnakeBody().get(0).layoutXProperty().bind(root.widthProperty().subtract(snake.getSnakeBody().get(0).radiusProperty()).divide(2));
+        snake.getSnakeBody().get(0).setTranslateX(300);
         snake.getSnakeBody().get(0).setTranslateY(450);
 
         // Ball
         Ball ball = new Ball();
-        ball.getBody().setTranslateX(50);
-        ball.getBody().setTranslateY(50);
+        ball.getBody().setTranslateX(100);
+        ball.getBody().setTranslateY(200);
+        ball.setVelocity(new Point2D.Float(1,0));
 
         // Block
         Block block = new Block();
-        block.getBody().setTranslateX(80);
-        block.getBody().setTranslateY(250);
+        block.getBody().setTranslateX(50);
+        block.getBody().setTranslateY(400);
 
         // Destroy Block
         DestroyBlock dblock = new DestroyBlock();
-        dblock.getBody().setTranslateX(50);
-        dblock.getBody().setTranslateY(500);
+        dblock.getBody().setTranslateX(100);
+        dblock.getBody().setTranslateY(600);
 
         // Magnet
         Magnet magnet = new Magnet();
-        magnet.getBody().setTranslateX(100);
-        magnet.getBody().setTranslateY(100);
+        magnet.getBody().setTranslateX(500);
+        magnet.getBody().setTranslateY(200);
 
         // Shield
         Shield shield = new Shield();
-        shield.getBody().setTranslateX(100);
-        shield.getBody().setTranslateY(200);
+        shield.getBody().setTranslateX(500);
+        shield.getBody().setTranslateY(400);
 
         // Wall
         Wall wall = new Wall();
-        shield.getBody().setTranslateX(100);
-        shield.getBody().setTranslateY(300);
+        wall.getBody().setTranslateX(500);
+        wall.getBody().setTranslateY(600);
 
-
-        root.getChildren().addAll(layout, snake.getSnakeBody().get(0), ball.getBody(), block.getBody(), dblock.getBody(), magnet.getBody(), shield.getBody(), wall.getBody());
+        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), ball.getBody(), block.getBody(), dblock.getBody(), magnet.getBody(), shield.getBody(), wall.getBody());
 
         return root;
     }
@@ -153,10 +171,20 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage){
+        Scene scene = new Scene(createMainMenuContent());
 
         this.stage = stage;
 
-        this.stage.setScene(new Scene(createMainMenuContent()));
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.A) {
+                snake.moveLeft();
+            } else if (e.getCode() == KeyCode.D) {
+                snake.moveRight();
+            }
+        });
+
+        this.stage.setScene(scene);
+
         this.stage.show();
 
     }

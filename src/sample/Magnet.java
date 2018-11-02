@@ -19,6 +19,10 @@ public class Magnet {
         this.alive = alive;
     }
 
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
+    }
+
     public Circle getBody() {
         return body;
     }

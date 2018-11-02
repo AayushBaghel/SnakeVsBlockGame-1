@@ -11,7 +11,7 @@ public class Ball {
     private Point2D velocity;
     private boolean alive = true;
 
-    private Circle body = new Circle(5, Color.BROWN);
+    private Circle body = new Circle(15, Color.BROWN);
 
     public int getValue() {
         return value;
@@ -27,6 +27,10 @@ public class Ball {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
     }
 
     public Circle getBody() {
