@@ -162,39 +162,64 @@ public class Main extends Application{
 
         // Ball
         Ball ball = new Ball();
-        ball.getBody().setTranslateX(100);
-        ball.getBody().setTranslateY(200);
+        ball.getBody().setTranslateX(150);
+        ball.getBody().setTranslateY(300);
         ball.setVelocity(new Point2D.Float(1,0));
         ballList.add(ball);
 
         // Block
-        Block block = new Block();
-        block.getBody().setTranslateX(50);
-        block.getBody().setTranslateY(400);
-        blockList.add(block);
+        Block block1 = new Block();
+        block1.getBody().setFill(Color.PINK);
+        block1.getBody().setTranslateX(0);
+        block1.getBody().setTranslateY(100);
+        blockList.add(block1);
+
+        Block block2 = new Block();
+        block2.getBody().setFill(Color.BEIGE);
+        block2.getBody().setTranslateX(100);
+        block2.getBody().setTranslateY(100);
+        blockList.add(block2);
+
+        Block block3 = new Block();
+        block3.getBody().setFill(Color.DARKSALMON);
+        block3.getBody().setTranslateX(200);
+        block3.getBody().setTranslateY(100);
+        blockList.add(block3);
+
+        Block block4 = new Block();
+        block4.getBody().setFill(Color.SANDYBROWN);
+        block4.getBody().setTranslateX(300);
+        block4.getBody().setTranslateY(100);
+        blockList.add(block4);
+
+        Block block5 = new Block();
+        block5.getBody().setFill(Color.LIGHTSLATEGRAY);
+        block5.getBody().setTranslateX(400);
+        block5.getBody().setTranslateY(100);
+        blockList.add(block5);
 
         // Destroy Block
         DestroyBlock dblock = new DestroyBlock();
-        dblock.getBody().setTranslateX(100);
-        dblock.getBody().setTranslateY(600);
+        dblock.getBody().setTranslateX(350);
+        dblock.getBody().setTranslateY(350);
         destroyBlockList.add(dblock);
 
         // Magnet
         Magnet magnet = new Magnet();
-        magnet.getBody().setTranslateX(400);
-        magnet.getBody().setTranslateY(200);
+        magnet.getBody().setTranslateX(450);
+        magnet.getBody().setTranslateY(400);
         magnetList.add(magnet);
 
         // Shield
         Shield shield = new Shield();
-        shield.getBody().setTranslateX(400);
-        shield.getBody().setTranslateY(400);
+        shield.getBody().setTranslateX(50);
+        shield.getBody().setTranslateY(300);
         shieldList.add(shield);
 
         // Wall
         Wall wall = new Wall();
-        wall.getBody().setTranslateX(400);
-        wall.getBody().setTranslateY(600);
+        wall.getBody().setTranslateX(200);
+        wall.getBody().setTranslateY(200);
         wallList.add(wall);
 
         for (Ball b: ballList
