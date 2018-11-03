@@ -20,10 +20,13 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application{
 
@@ -31,6 +34,15 @@ public class Main extends Application{
     private Stage stage;
     private Scene scene;
     private Snake snake = new Snake();
+
+    private List<Ball> ballList = new ArrayList<>();
+    private List<Block> blockList = new ArrayList<>();
+    private List<DestroyBlock> destroyBlockList = new ArrayList<>();
+    private List<Magnet> magnetList = new ArrayList<>();
+    private List<Shield> shieldList = new ArrayList<>();
+    private List<Wall> wallList = new ArrayList<>();
+
+    private double t = 0;
 
     private Parent createMainMenuContent() {
         root = new Pane();
@@ -46,7 +58,8 @@ public class Main extends Application{
         label.setTranslateY(100);
 
         Button startBtn = new Button("Start Game");
-        startBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        startBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
+        startBtn.setPrefSize(400, 100);
 
         startBtn.layoutXProperty().bind(root.widthProperty().subtract(startBtn.widthProperty()).divide(2));
         startBtn.setTranslateY(300);
@@ -54,12 +67,14 @@ public class Main extends Application{
         Button resumeBtn = new Button("Resume Game");
         resumeBtn.layoutXProperty().bind(root.widthProperty().subtract(resumeBtn.widthProperty()).divide(2));
         resumeBtn.setTranslateY(500);
-        resumeBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        resumeBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
+        resumeBtn.setPrefSize(400, 100);
 
         Button leaderBoardBtn = new Button("Leader board");
         leaderBoardBtn.layoutXProperty().bind(root.widthProperty().subtract(leaderBoardBtn.widthProperty()).divide(2));
         leaderBoardBtn.setTranslateY(700);
-        leaderBoardBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        leaderBoardBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
+        leaderBoardBtn.setPrefSize(400, 100);
 
         root.getChildren().addAll(label, startBtn, resumeBtn, leaderBoardBtn);
 
@@ -110,7 +125,7 @@ public class Main extends Application{
         snake = new Snake();
 
         // Setting snake head location
-        snake.getSnakeBody().get(0).setTranslateX(300);
+        snake.getSnakeBody().get(0).setTranslateX(250);
         snake.getSnakeBody().get(0).setTranslateY(450);
 
         /*
@@ -132,33 +147,78 @@ public class Main extends Application{
         ball.getBody().setTranslateX(100);
         ball.getBody().setTranslateY(200);
         ball.setVelocity(new Point2D.Float(1,0));
+        ballList.add(ball);
 
         // Block
         Block block = new Block();
         block.getBody().setTranslateX(50);
         block.getBody().setTranslateY(400);
+        blockList.add(block);
 
         // Destroy Block
         DestroyBlock dblock = new DestroyBlock();
         dblock.getBody().setTranslateX(100);
         dblock.getBody().setTranslateY(600);
+        destroyBlockList.add(dblock);
 
         // Magnet
         Magnet magnet = new Magnet();
         magnet.getBody().setTranslateX(400);
         magnet.getBody().setTranslateY(200);
+        magnetList.add(magnet);
 
         // Shield
         Shield shield = new Shield();
         shield.getBody().setTranslateX(400);
         shield.getBody().setTranslateY(400);
+        shieldList.add(shield);
 
         // Wall
         Wall wall = new Wall();
         wall.getBody().setTranslateX(400);
         wall.getBody().setTranslateY(600);
+        wallList.add(wall);
 
-        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), ball.getBody(), block.getBody(), dblock.getBody(), magnet.getBody(), shield.getBody(), wall.getBody());
+        for (Ball b: ballList
+             ) {
+            root.getChildren().add(b.getBody());
+        }
+
+        for (Block b: blockList
+             ) {
+            root.getChildren().add(b.getBody());
+        }
+
+        for (DestroyBlock db: destroyBlockList
+             ) {
+            root.getChildren().add(db.getBody());
+        }
+
+        for (Magnet m: magnetList
+             ) {
+            root.getChildren().add(m.getBody());
+        }
+
+        for (Shield s: shieldList
+             ) {
+            root.getChildren().add(s.getBody());
+        }
+
+        for (Wall w: wallList
+             ) {
+            root.getChildren().add(w.getBody());
+        }
+
+        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0));
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            }
+        };
+
+        timer.start();
 
         return root;
     }
@@ -167,12 +227,24 @@ public class Main extends Application{
         String option = choiceBox.getValue();
         if (option.equals("Start Again")) {
             createGameContent();
+            ballList.clear();
+            blockList.clear();
+            destroyBlockList.clear();
+            magnetList.clear();
+            shieldList.clear();
+            wallList.clear();
             stage.setScene(new Scene(createGameContent()));
             stage.show();
         }
 
         else if (option.equals("Exit to Main Menu")) {
             createMainMenuContent();
+            ballList.clear();
+            blockList.clear();
+            destroyBlockList.clear();
+            magnetList.clear();
+            shieldList.clear();
+            wallList.clear();
             stage.setScene(new Scene(createMainMenuContent()));
             stage.show();
         }
@@ -209,6 +281,48 @@ public class Main extends Application{
         this.stage.setScene(scene);
 
         this.stage.show();
+
+    }
+
+    private void update() {
+        t += 0.016;
+
+        scene.setOnKeyPressed(event -> {
+            switch(event.getCode()) {
+                case LEFT: snake.moveLeft(); break;
+                case RIGHT: snake.moveRight(); break;
+            }
+        });
+
+        for (Ball b: ballList
+        ) {
+            b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+        }
+
+        for (Block b: blockList
+        ) {
+            b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+        }
+
+        for (DestroyBlock db: destroyBlockList
+        ) {
+            db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
+        }
+
+        for (Magnet m: magnetList
+        ) {
+            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5);
+        }
+
+        for (Shield s: shieldList
+        ) {
+            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5);
+        }
+
+        for (Wall w: wallList
+        ) {
+            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5);
+        }
 
     }
 

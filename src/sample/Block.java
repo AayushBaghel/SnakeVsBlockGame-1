@@ -11,15 +11,15 @@ public class Block {
     private int value;
     private Point2D velocity;
     private boolean alive = true;
-    private Rectangle body = new Rectangle(120, 120);
+    private Rectangle body = new Rectangle(100, 100);
 
     Block() {
         body = defineBody(body);
     }
 
     private Rectangle defineBody(Rectangle body) {
-        body.setArcHeight(12);
-        body.setArcWidth(12);
+        body.setArcHeight(40);
+        body.setArcWidth(40);
 
         ArrayList<Color> colors = new ArrayList<>();
         colors.add(Color.BEIGE);

@@ -33,14 +33,14 @@ public class Snake {
     void moveLeft() {
         for (Circle c: snakeBody
              ) {
-            c.setTranslateX(c.getTranslateX() -5);
+            c.setTranslateX(c.getTranslateX() -25);
         }
     }
 
     void moveRight() {
         for (Circle c: snakeBody
              ) {
-            c.setTranslateX(c.getTranslateX() + 5);
+            c.setTranslateX(c.getTranslateX() + 25);
         }
     }
 
