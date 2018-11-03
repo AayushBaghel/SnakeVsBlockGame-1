@@ -375,8 +375,26 @@ public class Main extends Application{
 
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {
-                case LEFT: snake.moveLeft(); break;
-                case RIGHT: snake.moveRight(); break;
+                case LEFT:{
+                    for (Wall w:wallList){
+                        if(snake.getSnakeBody().get(0).getTranslateX()-25==w.getBody().getTranslateX()&&
+                                w.getBody().getTranslateY()>=250 && w.getBody().getTranslateY()<=450){
+                            return;
+                        }
+                    }
+                    snake.moveLeft();
+                }
+                break;
+                case RIGHT:{
+                    for (Wall w:wallList){
+                        if(snake.getSnakeBody().get(0).getTranslateX()+25==w.getBody().getTranslateX()&&
+                                w.getBody().getTranslateY()>=250 && w.getBody().getTranslateY()<=450){
+                            return;
+                        }
+                    }
+                    snake.moveRight();
+                }
+                break;
             }
         });
 
