@@ -20,6 +20,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.awt.geom.Point2D;
@@ -29,28 +30,36 @@ public class Main extends Application{
     private Pane root;
     private Stage stage;
     private Scene scene;
-    private Snake snake;
+    private Snake snake = new Snake();
 
     private Parent createMainMenuContent() {
         root = new Pane();
-        root.setPrefSize(600, 900);
-        root.setStyle("-fx-background-color: #7851A9;");
+        root.setPrefSize(500, 900);
+
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
+
 
         Label label = new Label("Snake Vs Block");
+        label.setFont(new Font("Courier New", 50));
+        label.setTextFill(Color.WHITE);
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
 
         Button startBtn = new Button("Start Game");
+        startBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+
         startBtn.layoutXProperty().bind(root.widthProperty().subtract(startBtn.widthProperty()).divide(2));
         startBtn.setTranslateY(300);
 
         Button resumeBtn = new Button("Resume Game");
         resumeBtn.layoutXProperty().bind(root.widthProperty().subtract(resumeBtn.widthProperty()).divide(2));
         resumeBtn.setTranslateY(500);
+        resumeBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
 
         Button leaderBoardBtn = new Button("Leader board");
         leaderBoardBtn.layoutXProperty().bind(root.widthProperty().subtract(leaderBoardBtn.widthProperty()).divide(2));
         leaderBoardBtn.setTranslateY(700);
+        leaderBoardBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
 
         root.getChildren().addAll(label, startBtn, resumeBtn, leaderBoardBtn);
 
@@ -68,15 +77,17 @@ public class Main extends Application{
 
     private Parent createGameContent() {
         root = new Pane();
-        root.setPrefSize(600, 900);
-        root.setStyle("-fx-background-color: #7851A9;");
+        root.setPrefSize(500, 900);
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
         // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
         choiceBox.getItems().addAll("Options:","Start Again", "Exit to Main Menu");
         choiceBox.setValue("Options:");
 
         Button choiceConfirmBtn = new Button("Confirm");
+        choiceConfirmBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
 
         choiceConfirmBtn.setOnAction(e -> getChoice(choiceBox));
 
@@ -84,7 +95,7 @@ public class Main extends Application{
         layout.setPadding(new Insets(20,20,20,20));
         layout.getChildren().addAll(choiceBox, choiceConfirmBtn);
 
-        Rectangle topBar = new Rectangle(600, 120);
+        Rectangle topBar = new Rectangle(500, 120);
         Stop[] stops = new Stop[] { new Stop(0, Color.web("#190236")), new Stop(1, Color.web("#7851A9"))};
         LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
 
@@ -101,6 +112,20 @@ public class Main extends Application{
         // Setting snake head location
         snake.getSnakeBody().get(0).setTranslateX(300);
         snake.getSnakeBody().get(0).setTranslateY(450);
+
+        /*
+        Code that should be here:
+        Spawn blocks etc. with certain speed downwards
+
+        blocks - spawn 5 in a single row, each has a 0.8 prob of spawning. If blocks reach certain
+        point (y point is block size away from bottom of screen, spawn new block row. When y point
+        is equal to bottom of screen, remove the blocks that are out of bounds.
+               - Also spawn a wall below each block by a certain probability
+
+        Tokens - spawn with certain probability
+
+        If the snake head's position is out of bounds, game ends
+         */
 
         // Ball
         Ball ball = new Ball();
@@ -120,17 +145,17 @@ public class Main extends Application{
 
         // Magnet
         Magnet magnet = new Magnet();
-        magnet.getBody().setTranslateX(500);
+        magnet.getBody().setTranslateX(400);
         magnet.getBody().setTranslateY(200);
 
         // Shield
         Shield shield = new Shield();
-        shield.getBody().setTranslateX(500);
+        shield.getBody().setTranslateX(400);
         shield.getBody().setTranslateY(400);
 
         // Wall
         Wall wall = new Wall();
-        wall.getBody().setTranslateX(500);
+        wall.getBody().setTranslateX(400);
         wall.getBody().setTranslateY(600);
 
         root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), ball.getBody(), block.getBody(), dblock.getBody(), magnet.getBody(), shield.getBody(), wall.getBody());
@@ -155,14 +180,17 @@ public class Main extends Application{
 
     private Parent createLeaderBoardContent() {
         root = new Pane();
-        root.setPrefSize(600, 900);
-        root.setStyle("-fx-background-color: #7851A9;");
+        root.setPrefSize(500, 900);
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
         Label label = new Label("Leader Board");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
+        label.setFont(new Font("Courier New", 40));
+        label.setTextFill(Color.WHITE);
 
         Button mainMenuBtn = new Button("Main Menu");
+        mainMenuBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
 
         root.getChildren().addAll(label, mainMenuBtn);
 
@@ -177,16 +205,6 @@ public class Main extends Application{
         scene = new Scene(createMainMenuContent());
 
         this.stage = stage;
-
-//        scene.setOnKeyPressed(e -> {
-//            if (e.getCode() == KeyCode.A) {
-//                snake.moveLeft();
-//            } else if (e.getCode() == KeyCode.D) {
-//                snake.moveRight();
-//            }
-//        });
-
-
 
         this.stage.setScene(scene);
 
