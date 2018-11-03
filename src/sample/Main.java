@@ -226,26 +226,35 @@ public class Main extends Application{
     private void getChoice(ChoiceBox<String> choiceBox) {
         String option = choiceBox.getValue();
         if (option.equals("Start Again")) {
-            createGameContent();
             ballList.clear();
             blockList.clear();
             destroyBlockList.clear();
             magnetList.clear();
             shieldList.clear();
             wallList.clear();
-            stage.setScene(new Scene(createGameContent()));
+            createGameContent();
+            scene = new Scene(createGameContent());
+            stage.setScene(scene);
             stage.show();
+
+            scene.setOnKeyPressed(event -> {
+                switch(event.getCode()) {
+                    case LEFT: snake.moveLeft(); break;
+                    case RIGHT: snake.moveRight(); break;
+                }
+            });
         }
 
         else if (option.equals("Exit to Main Menu")) {
-            createMainMenuContent();
             ballList.clear();
             blockList.clear();
             destroyBlockList.clear();
             magnetList.clear();
             shieldList.clear();
             wallList.clear();
-            stage.setScene(new Scene(createMainMenuContent()));
+            createMainMenuContent();
+            scene = new Scene(createMainMenuContent());
+            stage.setScene(scene);
             stage.show();
         }
     }
@@ -354,7 +363,8 @@ public class Main extends Application{
         @Override
         public void handle(ActionEvent e) {
             createLeaderBoardContent();
-            stage.setScene(new Scene(createLeaderBoardContent()));
+            scene = new Scene(createLeaderBoardContent());
+            stage.setScene(scene);
             stage.show();
         }
     }
@@ -363,7 +373,8 @@ public class Main extends Application{
         @Override
         public void handle(ActionEvent e) {
             createMainMenuContent();
-            stage.setScene(new Scene(createMainMenuContent()));
+            scene = new Scene(createMainMenuContent());
+            stage.setScene(scene);
             stage.show();
         }
     }
