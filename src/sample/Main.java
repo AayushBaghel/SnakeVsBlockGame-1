@@ -2,6 +2,7 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,17 +11,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -34,6 +31,7 @@ public class Main extends Application{
     private Stage stage;
     private Scene scene;
     private Snake snake = new Snake();
+    private javafx.scene.control.Button closeButton;
 
     private List<Ball> ballList = new ArrayList<>();
     private List<Block> blockList = new ArrayList<>();
@@ -50,12 +48,18 @@ public class Main extends Application{
 
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
-
         Label label = new Label("Snake Vs Block");
         label.setFont(new Font("Courier New", 50));
         label.setTextFill(Color.WHITE);
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
+
+        Button exitBtn = new Button("Exit");
+        exitBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 15px;");
+        exitBtn.setPrefSize(60, 50);
+        exitBtn.layoutXProperty().bind(root.widthProperty().subtract(exitBtn.widthProperty()).divide(2));
+        exitBtn.setTranslateX(210);
+        exitBtn.setTranslateY(15);
 
         Button startBtn = new Button("Start Game");
         startBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
@@ -76,7 +80,9 @@ public class Main extends Application{
         leaderBoardBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
         leaderBoardBtn.setPrefSize(400, 100);
 
-        root.getChildren().addAll(label, startBtn, resumeBtn, leaderBoardBtn);
+        root.getChildren().addAll(label, startBtn, resumeBtn, leaderBoardBtn, exitBtn);
+
+        exitBtn.setOnAction(e -> Platform.exit());
 
         StartBtnHandlerClass startHandler = new StartBtnHandlerClass();
         startBtn.setOnAction(startHandler);
@@ -89,6 +95,18 @@ public class Main extends Application{
 
         return root;
     }
+
+    // Exit Button
+
+    class ExitBtnHandlerClass implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent e) {
+            Stage stage = (Stage) closeButton.getScene().getWindow();
+            stage.close();
+        }
+    }
+
+    // Game Contents
 
     private Parent createGameContent() {
         root = new Pane();
@@ -180,32 +198,32 @@ public class Main extends Application{
         wallList.add(wall);
 
         for (Ball b: ballList
-             ) {
+        ) {
             root.getChildren().add(b.getBody());
         }
 
         for (Block b: blockList
-             ) {
+        ) {
             root.getChildren().add(b.getBody());
         }
 
         for (DestroyBlock db: destroyBlockList
-             ) {
+        ) {
             root.getChildren().add(db.getBody());
         }
 
         for (Magnet m: magnetList
-             ) {
+        ) {
             root.getChildren().add(m.getBody());
         }
 
         for (Shield s: shieldList
-             ) {
+        ) {
             root.getChildren().add(s.getBody());
         }
 
         for (Wall w: wallList
-             ) {
+        ) {
             root.getChildren().add(w.getBody());
         }
 
