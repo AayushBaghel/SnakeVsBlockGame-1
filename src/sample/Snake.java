@@ -31,15 +31,21 @@ public class Snake {
     boolean encounterMagnet(Magnet magnet) {return true;}
 
     void moveLeft() {
+        System.out.println("Left - "+snakeBody.get(0).getTranslateX());
+        if(snakeBody.get(0).getTranslateX()<=25)
+            return;
         for (Circle c: snakeBody
-             ) {
+        ) {
             c.setTranslateX(c.getTranslateX() -25);
         }
     }
 
     void moveRight() {
+        System.out.println("Right - "+snakeBody.get(0).getTranslateX());
+        if(snakeBody.get(0).getTranslateX()>=475)
+            return;
         for (Circle c: snakeBody
-             ) {
+        ) {
             c.setTranslateX(c.getTranslateX() + 25);
         }
     }
