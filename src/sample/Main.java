@@ -55,11 +55,11 @@ public class Main extends Application{
         label.setTranslateY(100);
 
         Button exitBtn = new Button("Exit");
-        exitBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 15px;");
-        exitBtn.setPrefSize(60, 50);
+        exitBtn.setStyle("-fx-background-color: red; -fx-text-fill: white");
+        exitBtn.setPrefSize(60, 25);
         exitBtn.layoutXProperty().bind(root.widthProperty().subtract(exitBtn.widthProperty()).divide(2));
         exitBtn.setTranslateX(210);
-        exitBtn.setTranslateY(15);
+        exitBtn.setTranslateY(10);
 
         Button startBtn = new Button("Start Game");
         startBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white; -fx-font-size: 40px;");
@@ -288,10 +288,44 @@ public class Main extends Application{
         label.setFont(new Font("Courier New", 40));
         label.setTextFill(Color.WHITE);
 
-        Button mainMenuBtn = new Button("Main Menu");
+        Button mainMenuBtn = new Button("<- Main Menu");
         mainMenuBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        mainMenuBtn.setTranslateX(10);
+        mainMenuBtn.setTranslateY(10);
 
         root.getChildren().addAll(label, mainMenuBtn);
+
+        MainMenuBtnHandlerClass mainMenuBtnHandler = new MainMenuBtnHandlerClass();
+        mainMenuBtn.setOnAction(mainMenuBtnHandler);
+
+        return root;
+    }
+
+    // Game Over Page to display the final score.
+
+    private Parent gameOverPageContent() {
+        root = new Pane();
+        root.setPrefSize(500, 900);
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
+
+        Label label = new Label("G A M E\nO V E R");
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
+        label.setTranslateY(100);
+        label.setFont(new Font("Courier New", 72));
+        label.setTextFill(Color.RED);
+
+        Label label2 = new Label("Your Score = "+snake.getLength());
+        label2.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
+        label2.setTranslateY(500);
+        label2.setFont(new Font("Courier New", 40));
+        label2.setTextFill(Color.WHITE);
+
+        Button mainMenuBtn = new Button("<- Main Menu");
+        mainMenuBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        mainMenuBtn.setTranslateX(10);
+        mainMenuBtn.setTranslateY(10);
+
+        root.getChildren().addAll(label, label2, mainMenuBtn);
 
         MainMenuBtnHandlerClass mainMenuBtnHandler = new MainMenuBtnHandlerClass();
         mainMenuBtn.setOnAction(mainMenuBtnHandler);
