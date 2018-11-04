@@ -42,6 +42,36 @@ public class Main extends Application{
 
     private double t = 0;
 
+    private Parent startScreenContent(){
+        root = new Pane();
+        root.setPrefSize(500,900);
+
+        root.setStyle("-fx-background-color: #FF007F; -fx-font-family: \"Courier New\";");
+
+        Label label = new Label("Snake\n v/s\nBlock");
+        label.setFont(new Font("Courier New Bold", 86));
+        label.setTextFill(Color.GHOSTWHITE);
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
+        label.setTranslateY(100);
+
+        Label label2 = new Label("Tap to Start");
+        label2.setFont(new Font("Courier New", 40));
+        label2.setTextFill(Color.BLACK);
+        label2.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
+        label2.setTranslateY(600);
+
+        root.getChildren().addAll(label,label2);
+
+        root.setOnMouseClicked(event -> {
+            createMainMenuContent();
+            scene = new Scene(createMainMenuContent());
+            stage.setScene(scene);
+            stage.show();
+        });
+
+        return root;
+    }
+
     private Parent createMainMenuContent() {
         root = new Pane();
         root.setPrefSize(500, 900);
@@ -51,6 +81,7 @@ public class Main extends Application{
         Label label = new Label("Snake Vs Block");
         label.setFont(new Font("Courier New", 50));
         label.setTextFill(Color.WHITE);
+        label.setStyle("\"-fx-font-weight: bold\"");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
 
@@ -360,7 +391,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage){
-        scene = new Scene(createMainMenuContent());
+        scene = new Scene(startScreenContent());
 
         this.stage = stage;
 
