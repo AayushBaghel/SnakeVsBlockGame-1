@@ -9,7 +9,7 @@ public class Magnet {
     private Point2D velocity;
     private boolean alive = true;
 
-    private Circle body = new Circle(5, Color.RED);
+    private Circle body = new Circle(10, Color.RED);
 
     public boolean isAlive() {
         return alive;
