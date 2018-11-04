@@ -127,16 +127,6 @@ public class Main extends Application{
         return root;
     }
 
-    // Exit Button
-
-    class ExitBtnHandlerClass implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent e) {
-            Stage stage = (Stage) closeButton.getScene().getWindow();
-            stage.close();
-        }
-    }
-
     // Game Contents
 
     private Parent createGameContent() {
@@ -202,31 +192,31 @@ public class Main extends Application{
         Block block1 = new Block();
         block1.getBody().setFill(Color.PINK);
         block1.getBody().setTranslateX(0);
-        block1.getBody().setTranslateY(100);
+        block1.getBody().setTranslateY(50);
         blockList.add(block1);
 
         Block block2 = new Block();
         block2.getBody().setFill(Color.BEIGE);
         block2.getBody().setTranslateX(100);
-        block2.getBody().setTranslateY(100);
+        block2.getBody().setTranslateY(50);
         blockList.add(block2);
 
         Block block3 = new Block();
         block3.getBody().setFill(Color.DARKSALMON);
         block3.getBody().setTranslateX(200);
-        block3.getBody().setTranslateY(100);
+        block3.getBody().setTranslateY(50);
         blockList.add(block3);
 
         Block block4 = new Block();
         block4.getBody().setFill(Color.SANDYBROWN);
         block4.getBody().setTranslateX(300);
-        block4.getBody().setTranslateY(100);
+        block4.getBody().setTranslateY(50);
         blockList.add(block4);
 
         Block block5 = new Block();
         block5.getBody().setFill(Color.LIGHTSLATEGRAY);
         block5.getBody().setTranslateX(400);
-        block5.getBody().setTranslateY(100);
+        block5.getBody().setTranslateY(50);
         blockList.add(block5);
 
         // Destroy Block
@@ -238,44 +228,54 @@ public class Main extends Application{
         // Magnet
         Magnet magnet = new Magnet();
         magnet.getBody().setTranslateX(450);
-        magnet.getBody().setTranslateY(400);
+        magnet.getBody().setTranslateY(300);
         magnetList.add(magnet);
 
         // Shield
         Shield shield = new Shield();
         shield.getBody().setTranslateX(50);
-        shield.getBody().setTranslateY(300);
+        shield.getBody().setTranslateY(200);
         shieldList.add(shield);
 
         // Wall
         Wall wall = new Wall();
         wall.getBody().setTranslateX(200);
-        wall.getBody().setTranslateY(200);
+        wall.getBody().setTranslateY(50);
         wallList.add(wall);
+
+        Wall wall2 = new Wall();
+        wall2.getBody().setTranslateX(400);
+        wall2.getBody().setTranslateY(50);
+        wallList.add(wall2);
 
         for (Ball b: ballList
         ) {
-            root.getChildren().add(b.getBody());
+            if(b.isAlive())
+                root.getChildren().add(b.getBody());
         }
 
         for (Block b: blockList
         ) {
-            root.getChildren().add(b.getBody());
+            if(b.isAlive())
+                root.getChildren().add(b.getBody());
         }
 
         for (DestroyBlock db: destroyBlockList
         ) {
-            root.getChildren().add(db.getBody());
+            if(db.isAlive())
+                root.getChildren().add(db.getBody());
         }
 
         for (Magnet m: magnetList
         ) {
-            root.getChildren().add(m.getBody());
+            if(m.isAlive())
+                root.getChildren().add(m.getBody());
         }
 
         for (Shield s: shieldList
         ) {
-            root.getChildren().add(s.getBody());
+            if(s.isAlive())
+                root.getChildren().add(s.getBody());
         }
 
         for (Wall w: wallList
@@ -400,16 +400,15 @@ public class Main extends Application{
         this.stage.show();
 
     }
-
     private void update() {
         t += 0.016;
-
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {
                 case LEFT:{
                     for (Wall w:wallList){
                         if(snake.getSnakeBody().get(0).getTranslateX()-25==w.getBody().getTranslateX()&&
-                                w.getBody().getTranslateY()>=250 && w.getBody().getTranslateY()<=450){
+                                w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
+                                w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
                         }
                     }
@@ -419,7 +418,8 @@ public class Main extends Application{
                 case RIGHT:{
                     for (Wall w:wallList){
                         if(snake.getSnakeBody().get(0).getTranslateX()+25==w.getBody().getTranslateX()&&
-                                w.getBody().getTranslateY()>=250 && w.getBody().getTranslateY()<=450){
+                                w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
+                                w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
                         }
                     }
@@ -431,31 +431,79 @@ public class Main extends Application{
 
         for (Ball b: ballList
         ) {
-            b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
-        }
+            if(b.isAlive()){
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+            }
+            else{
+                b.getBody().setRadius(0);
+            }
+            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getRadius()&&
+                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+b.getBody().getRadius() &&
+                    snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()-b.getBody().getRadius()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getRadius()){
+                b.setAlive(false);
+            }
 
+        }
         for (Block b: blockList
         ) {
-            b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+            if(b.isAlive()){
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+            }
+            else{
+                b.getBody().setHeight(0);
+                b.getBody().setWidth(0);
+            }
+            if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
+                    snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
+                b.setAlive(false);
+            }
         }
 
         for (DestroyBlock db: destroyBlockList
         ) {
-            db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
+            if(db.isAlive()){
+                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
+            }
+            else{
+                db.getBody().setHeight(0);
+                db.getBody().setWidth(0);
+            }
+            if(db.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-db.getBody().getHeight()&&
+                    snake.getSnakeBody().get(0).getTranslateX()>=db.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=db.getBody().getTranslateX()+db.getBody().getWidth()){
+                db.setAlive(false);
+            }
         }
 
         for (Magnet m: magnetList
         ) {
             m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5);
+            if(m.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
+                    snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())){
+                m.getBody().setRadius(0);
+            }
         }
 
         for (Shield s: shieldList
         ) {
             s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5);
+            if(s.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-s.getBody().getHeight()&&
+                    snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
+                    snake.getSnakeBody().get(0).getTranslateX()<=s.getBody().getTranslateX()+s.getBody().getWidth()){
+                s.getBody().setWidth(0);
+                s.getBody().setHeight(0);
+            }
         }
 
         for (Wall w: wallList
         ) {
+            if(w.getBody().getTranslateY()+w.getBody().getHeight()+snake.getSnakeBody().get(0).getRadius()==snake.getSnakeBody().get(0).getTranslateY()&&
+                    snake.getSnakeBody().get(0).getTranslateX()==w.getBody().getTranslateX()){
+                snake.getSnakeBody().get(0).setTranslateX(snake.getSnakeBody().get(0).getTranslateX()+25);
+            }
             w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5);
         }
 
