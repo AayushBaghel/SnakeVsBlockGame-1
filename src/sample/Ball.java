@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import java.awt.geom.Point2D;
@@ -11,7 +10,7 @@ public class Ball {
     private Point2D velocity;
     private boolean alive = true;
 
-    private Circle body = new Circle(15, Color.BROWN);
+    private Circle body = new Circle(15, Color.GOLD);
 
     public int getValue() {
         return value;
