@@ -1,20 +1,41 @@
 package sample;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Block {
     private int value;
     private Point2D velocity;
     private boolean alive = true;
-    private Rectangle body = new Rectangle(100, 100);
+//    private Rectangle body = new Rectangle(100, 100);
+
+    StackPane body = new StackPane();
 
     Block() {
-        body = defineBody(body);
+//        body = defineBody(body);
+
+        Random r = new Random();
+        value = r.nextInt(8) + 1;
+
+        Rectangle rect = new Rectangle(100, 100);
+        rect = defineBody(rect);
+
+        body.getChildren().add(rect);
+        Text txt = new Text(Integer.toString(value));
+        txt.setFont(Font.font("Courier New Bold"));
+        body.getChildren().add(txt);
+        body.setAlignment(Pos.CENTER);
+
     }
 
     private Rectangle defineBody(Rectangle body) {
@@ -58,7 +79,7 @@ public class Block {
         this.velocity = velocity;
     }
 
-    public Rectangle getBody() {
+    public StackPane getBody() {
         return body;
     }
 }

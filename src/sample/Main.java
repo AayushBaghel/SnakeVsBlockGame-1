@@ -185,36 +185,30 @@ public class Main extends Application{
         Ball ball = new Ball();
         ball.getBody().setTranslateX(150);
         ball.getBody().setTranslateY(300);
-        ball.setVelocity(new Point2D.Float(1,0));
         ballList.add(ball);
 
         // Block
         Block block1 = new Block();
-        block1.getBody().setFill(Color.PINK);
         block1.getBody().setTranslateX(0);
         block1.getBody().setTranslateY(50);
         blockList.add(block1);
 
         Block block2 = new Block();
-        block2.getBody().setFill(Color.BEIGE);
         block2.getBody().setTranslateX(100);
         block2.getBody().setTranslateY(50);
         blockList.add(block2);
 
         Block block3 = new Block();
-        block3.getBody().setFill(Color.DARKSALMON);
         block3.getBody().setTranslateX(200);
         block3.getBody().setTranslateY(50);
         blockList.add(block3);
 
         Block block4 = new Block();
-        block4.getBody().setFill(Color.SANDYBROWN);
         block4.getBody().setTranslateX(300);
         block4.getBody().setTranslateY(50);
         blockList.add(block4);
 
         Block block5 = new Block();
-        block5.getBody().setFill(Color.LIGHTSLATEGRAY);
         block5.getBody().setTranslateX(400);
         block5.getBody().setTranslateY(50);
         blockList.add(block5);
@@ -435,14 +429,14 @@ public class Main extends Application{
                 b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
             }
             else{
-                b.getBody().setRadius(0);
+                b.getBody().setVisible(false);
             }
-            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getRadius()&&
-                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+b.getBody().getRadius() &&
-                    snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()-b.getBody().getRadius()&&
-                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getRadius()){
+            if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
+                    snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
                 b.setAlive(false);
             }
+
 
         }
         for (Block b: blockList
@@ -451,8 +445,7 @@ public class Main extends Application{
                 b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
             }
             else{
-                b.getBody().setHeight(0);
-                b.getBody().setWidth(0);
+                b.getBody().setVisible(false);
             }
             if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
