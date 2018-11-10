@@ -27,6 +27,8 @@ import java.util.List;
 
 public class Main extends Application{
 
+    private int score = 0;
+
     private Pane root;
     private Stage stage;
     private Scene scene;
@@ -133,6 +135,17 @@ public class Main extends Application{
         root = new Pane();
         root.setPrefSize(500, 900);
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
+
+        // Score
+        Label label = new Label(Integer.toString(score));
+        label.setFont(new Font("Courier New", 20));
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()));
+        label.setTextFill(Color.WHITE);
+
+        Label scoreLabel = new Label("Score: ");
+        scoreLabel.layoutXProperty().bind(root.widthProperty().subtract(scoreLabel.widthProperty()).subtract(label.widthProperty()));
+        scoreLabel.setFont(new Font("Courier New", 20));
+        scoreLabel.setTextFill(Color.WHITE);
 
         // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -277,7 +290,7 @@ public class Main extends Application{
             root.getChildren().add(w.getBody());
         }
 
-        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0));
+        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), label, scoreLabel);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -364,7 +377,7 @@ public class Main extends Application{
         label.setFont(new Font("Courier New", 72));
         label.setTextFill(Color.RED);
 
-        Label label2 = new Label("Your Score = "+snake.getLength());
+        Label label2 = new Label("Your Score = "+score);
         label2.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label2.setTranslateY(500);
         label2.setFont(new Font("Courier New", 40));
@@ -434,7 +447,12 @@ public class Main extends Application{
             if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
+
                 b.setAlive(false);
+                b.getBody().setVisible(false);
+
+                snake.setLength(snake.getLength() + b.getValue());
+                ballList.remove(b);
             }
 
 
@@ -450,7 +468,20 @@ public class Main extends Application{
             if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
+
                 b.setAlive(false);
+                b.getBody().setVisible(false);
+
+                if (b.getValue() >= snake.getLength()) {
+                    scene = new Scene(gameOverPageContent());
+                    stage.setScene(scene);
+                    stage.show();
+                }
+                else {
+                    score += b.getValue();
+                    snake.setLength(snake.getLength() - b.getValue());
+                    blockList.remove(b);
+                }
             }
         }
 
@@ -466,7 +497,19 @@ public class Main extends Application{
             if(db.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-db.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=db.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=db.getBody().getTranslateX()+db.getBody().getWidth()){
+
                 db.setAlive(false);
+                db.getBody().setHeight(0);
+                db.getBody().setWidth(0);
+                destroyBlockList.remove(db);
+
+                for (Block b: blockList
+                     ) {
+                    b.setAlive(false);
+                    b.getBody().setVisible(false);
+                    score += b.getValue();
+                    blockList.remove(b);
+                }
             }
         }
 
