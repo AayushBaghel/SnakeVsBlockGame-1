@@ -28,12 +28,15 @@ import java.util.List;
 public class Main extends Application{
 
     private int score = 0;
+    private Label scoreLabel;
 
     private Pane root;
     private Stage stage;
     private Scene scene;
+    private String sceneIndicator;
     private Snake snake = new Snake();
     private javafx.scene.control.Button closeButton;
+    private AnimationTimer timer;
 
     private List<Ball> ballList = new ArrayList<>();
     private List<Block> blockList = new ArrayList<>();
@@ -69,6 +72,7 @@ public class Main extends Application{
             scene = new Scene(createMainMenuContent());
             stage.setScene(scene);
             stage.show();
+            sceneIndicator = "MainMenu";
         });
 
         return root;
@@ -132,20 +136,30 @@ public class Main extends Application{
     // Game Contents
 
     private Parent createGameContent() {
+        ballList.clear();
+        blockList.clear();
+        destroyBlockList.clear();
+        magnetList.clear();
+        shieldList.clear();
+        wallList.clear();
+        score = 0;
+        t = 0;
+        snake.setLength(1);
+
         root = new Pane();
         root.setPrefSize(500, 900);
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
         // Score
-        Label label = new Label(Integer.toString(score));
-        label.setFont(new Font("Courier New", 20));
-        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()));
-        label.setTextFill(Color.WHITE);
-
-        Label scoreLabel = new Label("Score: ");
-        scoreLabel.layoutXProperty().bind(root.widthProperty().subtract(scoreLabel.widthProperty()).subtract(label.widthProperty()));
+        scoreLabel = new Label(Integer.toString(score));
         scoreLabel.setFont(new Font("Courier New", 20));
+        scoreLabel.layoutXProperty().bind(root.widthProperty().subtract(scoreLabel.widthProperty()));
         scoreLabel.setTextFill(Color.WHITE);
+
+        Label label = new Label("Score: ");
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).subtract(label.widthProperty()));
+        label.setFont(new Font("Courier New", 20));
+        label.setTextFill(Color.WHITE);
 
         // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
@@ -292,10 +306,12 @@ public class Main extends Application{
 
         root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), label, scoreLabel);
 
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                if (sceneIndicator.equals("Game")) {
+                    update();
+                }
             }
         };
 
@@ -316,6 +332,7 @@ public class Main extends Application{
             createGameContent();
             scene = new Scene(createGameContent());
             stage.setScene(scene);
+            sceneIndicator = "Game";
             stage.show();
 
             scene.setOnKeyPressed(event -> {
@@ -336,6 +353,7 @@ public class Main extends Application{
             createMainMenuContent();
             scene = new Scene(createMainMenuContent());
             stage.setScene(scene);
+            sceneIndicator = "MainMenu";
             stage.show();
         }
     }
@@ -399,6 +417,7 @@ public class Main extends Application{
     @Override
     public void start(Stage stage){
         scene = new Scene(startScreenContent());
+        sceneIndicator = "StartScreen";
 
         this.stage = stage;
 
@@ -409,6 +428,10 @@ public class Main extends Application{
     }
     private void update() {
         t += 0.016;
+
+
+
+        // Move snake
         scene.setOnKeyPressed(event -> {
             switch(event.getCode()) {
                 case LEFT:{
@@ -436,6 +459,7 @@ public class Main extends Application{
             }
         });
 
+        // Move objects and check if they collide with snake
         for (Ball b: ballList
         ) {
             if(b.isAlive()){
@@ -464,24 +488,30 @@ public class Main extends Application{
             }
             else{
                 b.getBody().setVisible(false);
+                blockList.remove(b);
             }
             if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
 
-                b.setAlive(false);
-                b.getBody().setVisible(false);
-
-                if (b.getValue() >= snake.getLength()) {
+                if (b.getValue() >= snake.getLength() && b.isAlive()) {
                     scene = new Scene(gameOverPageContent());
+                    sceneIndicator = "GameOver";
                     stage.setScene(scene);
                     stage.show();
+                    timer.stop();
                 }
                 else {
                     score += b.getValue();
+                    scoreLabel.setText(Integer.toString(score));
+//                    root.getChildren().add(scoreLabel);
                     snake.setLength(snake.getLength() - b.getValue());
                     blockList.remove(b);
                 }
+
+                b.setAlive(false);
+                b.getBody().setVisible(false);
+                blockList.remove(b);
             }
         }
 
@@ -493,6 +523,7 @@ public class Main extends Application{
             else{
                 db.getBody().setHeight(0);
                 db.getBody().setWidth(0);
+                destroyBlockList.remove(db);
             }
             if(db.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-db.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=db.getBody().getTranslateX()&&
@@ -520,6 +551,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
                     snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())){
                 m.getBody().setRadius(0);
+                m.setAlive(false);
+                magnetList.remove(m);
             }
         }
 
@@ -531,6 +564,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()<=s.getBody().getTranslateX()+s.getBody().getWidth()){
                 s.getBody().setWidth(0);
                 s.getBody().setHeight(0);
+                s.setAlive(false);
+                shieldList.remove(s);
             }
         }
 
@@ -543,6 +578,120 @@ public class Main extends Application{
             w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5);
         }
 
+
+        // Spawn objects
+
+
+        if (t >= 20) {
+            t = 0;
+            // Ball
+            Ball ball = new Ball();
+            ball.getBody().setTranslateX(150);
+            ball.getBody().setTranslateY(300);
+            ballList.add(ball);
+            root.getChildren().add(ball.getBody());
+
+            // Block
+            Block block1 = new Block();
+            block1.getBody().setTranslateX(0);
+            block1.getBody().setTranslateY(50);
+            blockList.add(block1);
+            root.getChildren().add(block1.getBody());
+
+            Block block2 = new Block();
+            block2.getBody().setTranslateX(100);
+            block2.getBody().setTranslateY(50);
+            blockList.add(block2);
+            root.getChildren().add(block2.getBody());
+
+            Block block3 = new Block();
+            block3.getBody().setTranslateX(200);
+            block3.getBody().setTranslateY(50);
+            blockList.add(block3);
+            root.getChildren().add(block3.getBody());
+
+            Block block4 = new Block();
+            block4.getBody().setTranslateX(300);
+            block4.getBody().setTranslateY(50);
+            blockList.add(block4);
+            root.getChildren().add(block4.getBody());
+
+            Block block5 = new Block();
+            block5.getBody().setTranslateX(400);
+            block5.getBody().setTranslateY(50);
+            blockList.add(block5);
+            root.getChildren().add(block5.getBody());
+
+            // Destroy Block
+            DestroyBlock dblock = new DestroyBlock();
+            dblock.getBody().setTranslateX(350);
+            dblock.getBody().setTranslateY(350);
+            destroyBlockList.add(dblock);
+            root.getChildren().add(dblock.getBody());
+
+            // Magnet
+            Magnet magnet = new Magnet();
+            magnet.getBody().setTranslateX(450);
+            magnet.getBody().setTranslateY(300);
+            magnetList.add(magnet);
+            root.getChildren().add(magnet.getBody());
+
+            // Shield
+            Shield shield = new Shield();
+            shield.getBody().setTranslateX(50);
+            shield.getBody().setTranslateY(200);
+            shieldList.add(shield);
+            root.getChildren().add(shield.getBody());
+
+            // Wall
+            Wall wall = new Wall();
+            wall.getBody().setTranslateX(200);
+            wall.getBody().setTranslateY(50);
+            wallList.add(wall);
+            root.getChildren().add(wall.getBody());
+
+            Wall wall2 = new Wall();
+            wall2.getBody().setTranslateX(400);
+            wall2.getBody().setTranslateY(50);
+            wallList.add(wall2);
+            root.getChildren().add(wall2.getBody());
+
+//            for (Ball b: ballList
+//            ) {
+//                if(b.isAlive())
+//                    root.getChildren().add(b.getBody());
+//            }
+//
+//            for (Block b: blockList
+//            ) {
+//                if(b.isAlive())
+//                    root.getChildren().add(b.getBody());
+//            }
+//
+//            for (DestroyBlock db: destroyBlockList
+//            ) {
+//                if(db.isAlive())
+//                    root.getChildren().add(db.getBody());
+//            }
+//
+//            for (Magnet m: magnetList
+//            ) {
+//                if(m.isAlive())
+//                    root.getChildren().add(m.getBody());
+//            }
+//
+//            for (Shield s: shieldList
+//            ) {
+//                if(s.isAlive())
+//                    root.getChildren().add(s.getBody());
+//            }
+//
+//            for (Wall w: wallList
+//            ) {
+//                root.getChildren().add(w.getBody());
+//            }
+        }
+
     }
 
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
@@ -550,15 +699,16 @@ public class Main extends Application{
         public void handle(ActionEvent e) {
             createGameContent();
             scene = new Scene(createGameContent());
+            sceneIndicator = "Game";
             stage.setScene(scene);
             stage.show();
 
-            scene.setOnKeyPressed(event -> {
-                switch(event.getCode()) {
-                    case LEFT: snake.moveLeft(); break;
-                    case RIGHT: snake.moveRight(); break;
-                }
-            });
+//            scene.setOnKeyPressed(event -> {
+//                switch(event.getCode()) {
+//                    case LEFT: snake.moveLeft(); break;
+//                    case RIGHT: snake.moveRight(); break;
+//                }
+//            });
         }
     }
 
@@ -574,6 +724,7 @@ public class Main extends Application{
         public void handle(ActionEvent e) {
             createLeaderBoardContent();
             scene = new Scene(createLeaderBoardContent());
+            sceneIndicator = "LeaderBoard";
             stage.setScene(scene);
             stage.show();
         }
@@ -584,6 +735,7 @@ public class Main extends Application{
         public void handle(ActionEvent e) {
             createMainMenuContent();
             scene = new Scene(createMainMenuContent());
+            sceneIndicator = "MainMenu";
             stage.setScene(scene);
             stage.show();
         }
