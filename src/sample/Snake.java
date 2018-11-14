@@ -1,7 +1,11 @@
 package sample;
 
+import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -32,7 +36,7 @@ public class Snake {
 
     void moveLeft() {
         System.out.println("Left - "+snakeBody.get(0).getTranslateX());
-        if(snakeBody.get(0).getTranslateX()<=25)
+        if(snakeBody.get(0).getTranslateX()<=20)
             return;
         for (Circle c: snakeBody
         ) {
@@ -42,7 +46,7 @@ public class Snake {
 
     void moveRight() {
         System.out.println("Right - "+snakeBody.get(0).getTranslateX());
-        if(snakeBody.get(0).getTranslateX()>=475)
+        if(snakeBody.get(0).getTranslateX()>=480)
             return;
         for (Circle c: snakeBody
         ) {

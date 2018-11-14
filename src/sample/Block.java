@@ -38,6 +38,20 @@ public class Block {
 
     }
 
+    Block(int i) {
+        Random r = new Random();
+        value = r.nextInt(i-1) + 1;
+
+        Rectangle rect = new Rectangle(100, 100);
+        rect = defineBody(rect);
+
+        body.getChildren().add(rect);
+        Text txt = new Text(Integer.toString(value));
+        txt.setFont(Font.font("Courier New Bold"));
+        body.getChildren().add(txt);
+        body.setAlignment(Pos.CENTER);
+    }
+
     private Rectangle defineBody(Rectangle body) {
         body.setArcHeight(40);
         body.setArcWidth(40);

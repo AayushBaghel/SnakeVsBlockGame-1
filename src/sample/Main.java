@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main extends Application{
 
@@ -436,7 +437,7 @@ public class Main extends Application{
             switch(event.getCode()) {
                 case LEFT:{
                     for (Wall w:wallList){
-                        if(snake.getSnakeBody().get(0).getTranslateX()-25==w.getBody().getTranslateX()&&
+                        if(snake.getSnakeBody().get(0).getTranslateX()-20==w.getBody().getTranslateX()&&
                                 w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
                                 w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
@@ -447,7 +448,7 @@ public class Main extends Application{
                 break;
                 case RIGHT:{
                     for (Wall w:wallList){
-                        if(snake.getSnakeBody().get(0).getTranslateX()+25==w.getBody().getTranslateX()&&
+                        if(snake.getSnakeBody().get(0).getTranslateX()+20==w.getBody().getTranslateX()&&
                                 w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
                                 w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
@@ -536,11 +537,13 @@ public class Main extends Application{
 
                 for (Block b: blockList
                      ) {
+                    score += b.getValue();
+                    scoreLabel.setText(Integer.toString(score));
                     b.setAlive(false);
                     b.getBody().setVisible(false);
-                    score += b.getValue();
-                    blockList.remove(b);
                 }
+
+                blockList.clear();
             }
         }
 
@@ -580,81 +583,154 @@ public class Main extends Application{
 
 
         // Spawn objects
+        Random random = new Random();
 
+        // Ball
+        int ballProb = random.nextInt(999) + 1;
+
+        if (ballProb <= 2) {
+            Ball ball = new Ball();
+            ball.getBody().setTranslateX(random.nextInt(440) + 30);
+            ball.getBody().setTranslateY(random.nextInt(400) + 30);
+            ballList.add(ball);
+            root.getChildren().add(ball.getBody());
+        }
 
         if (t >= 20) {
             t = 0;
-            // Ball
-            Ball ball = new Ball();
-            ball.getBody().setTranslateX(150);
-            ball.getBody().setTranslateY(300);
-            ballList.add(ball);
-            root.getChildren().add(ball.getBody());
 
-            // Block
-            Block block1 = new Block();
-            block1.getBody().setTranslateX(0);
-            block1.getBody().setTranslateY(50);
-            blockList.add(block1);
-            root.getChildren().add(block1.getBody());
 
-            Block block2 = new Block();
-            block2.getBody().setTranslateX(100);
-            block2.getBody().setTranslateY(50);
-            blockList.add(block2);
-            root.getChildren().add(block2.getBody());
+            // Blocks
+            boolean block1Placed = false;
+            boolean block2Placed = false;
+            boolean block3Placed = false;
+            boolean block4Placed = false;
 
-            Block block3 = new Block();
-            block3.getBody().setTranslateX(200);
-            block3.getBody().setTranslateY(50);
-            blockList.add(block3);
-            root.getChildren().add(block3.getBody());
+            int block1Prob = random.nextInt(99) + 1;
 
-            Block block4 = new Block();
-            block4.getBody().setTranslateX(300);
-            block4.getBody().setTranslateY(50);
-            blockList.add(block4);
-            root.getChildren().add(block4.getBody());
+            if (block1Prob <= 80) {
+                block1Placed = true;
+                Block block1 = new Block();
+                block1.getBody().setTranslateX(0);
+                block1.getBody().setTranslateY(50);
+                blockList.add(block1);
+                root.getChildren().add(block1.getBody());
+            }
 
-            Block block5 = new Block();
-            block5.getBody().setTranslateX(400);
-            block5.getBody().setTranslateY(50);
-            blockList.add(block5);
-            root.getChildren().add(block5.getBody());
+            int block2Prob = random.nextInt(99) + 1;
+
+            if (block2Prob <= 80) {
+                block2Placed = true;
+                Block block2 = new Block();
+                block2.getBody().setTranslateX(100);
+                block2.getBody().setTranslateY(50);
+                blockList.add(block2);
+                root.getChildren().add(block2.getBody());
+
+                int wallProb = random.nextInt(99) + 1;
+
+                if (wallProb <=80) {
+                    Wall wall = new Wall();
+                    wall.getBody().setTranslateX(100);
+                    wall.getBody().setTranslateY(50);
+                    wallList.add(wall);
+                    root.getChildren().add(wall.getBody());
+                }
+            }
+
+            int block3Prob = random.nextInt(99) + 1;
+
+            if (block3Prob <= 80) {
+                block3Placed = true;
+                Block block3 = new Block();
+                block3.getBody().setTranslateX(200);
+                block3.getBody().setTranslateY(50);
+                blockList.add(block3);
+                root.getChildren().add(block3.getBody());
+
+                int wallProb = random.nextInt(99) + 1;
+
+                if (wallProb <=80) {
+                    Wall wall = new Wall();
+                    wall.getBody().setTranslateX(200);
+                    wall.getBody().setTranslateY(50);
+                    wallList.add(wall);
+                    root.getChildren().add(wall.getBody());
+                }
+            }
+
+            int block4Prob = random.nextInt(99) + 1;
+
+            if (block4Prob <= 80) {
+                block4Placed = true;
+                Block block4 = new Block();
+                block4.getBody().setTranslateX(300);
+                block4.getBody().setTranslateY(50);
+                blockList.add(block4);
+                root.getChildren().add(block4.getBody());
+
+                int wallProb = random.nextInt(99) + 1;
+
+                if (wallProb <=80) {
+                    Wall wall = new Wall();
+                    wall.getBody().setTranslateX(300);
+                    wall.getBody().setTranslateY(50);
+                    wallList.add(wall);
+                    root.getChildren().add(wall.getBody());
+                }
+            }
+
+            int block5Prob = random.nextInt(99) + 1;
+
+            if (block5Prob <= 80) {
+                Block block5;
+                if (block1Placed && block2Placed && block3Placed && block4Placed) {
+                    block5 = new Block(snake.getLength());
+                }
+                else {
+                    block5 = new Block();
+                }
+                block5.getBody().setTranslateX(400);
+                block5.getBody().setTranslateY(50);
+                blockList.add(block5);
+                root.getChildren().add(block5.getBody());
+            }
 
             // Destroy Block
-            DestroyBlock dblock = new DestroyBlock();
-            dblock.getBody().setTranslateX(350);
-            dblock.getBody().setTranslateY(350);
-            destroyBlockList.add(dblock);
-            root.getChildren().add(dblock.getBody());
+
+            int dblockProb = random.nextInt(99) + 1;
+
+            if (dblockProb <= 30) {
+                DestroyBlock dblock = new DestroyBlock();
+                dblock.getBody().setTranslateX(random.nextInt(500-30) + 30);
+                dblock.getBody().setTranslateY(350);
+                destroyBlockList.add(dblock);
+                root.getChildren().add(dblock.getBody());
+            }
 
             // Magnet
-            Magnet magnet = new Magnet();
-            magnet.getBody().setTranslateX(450);
-            magnet.getBody().setTranslateY(300);
-            magnetList.add(magnet);
-            root.getChildren().add(magnet.getBody());
+
+            int magnetProb = random.nextInt(99) + 1;
+
+            if (magnetProb <= 30) {
+                Magnet magnet = new Magnet();
+                magnet.getBody().setTranslateX(random.nextInt(500-10) + 10);
+                magnet.getBody().setTranslateY(300);
+                magnetList.add(magnet);
+                root.getChildren().add(magnet.getBody());
+            }
 
             // Shield
-            Shield shield = new Shield();
-            shield.getBody().setTranslateX(50);
-            shield.getBody().setTranslateY(200);
-            shieldList.add(shield);
-            root.getChildren().add(shield.getBody());
 
-            // Wall
-            Wall wall = new Wall();
-            wall.getBody().setTranslateX(200);
-            wall.getBody().setTranslateY(50);
-            wallList.add(wall);
-            root.getChildren().add(wall.getBody());
+            int shieldProb = random.nextInt(99) + 1;
 
-            Wall wall2 = new Wall();
-            wall2.getBody().setTranslateX(400);
-            wall2.getBody().setTranslateY(50);
-            wallList.add(wall2);
-            root.getChildren().add(wall2.getBody());
+            if (shieldProb <= 30) {
+                Shield shield = new Shield();
+                shield.getBody().setTranslateX(50);
+                shield.getBody().setTranslateY(200);
+                shieldList.add(shield);
+                root.getChildren().add(shield.getBody());
+            }
 
 //            for (Ball b: ballList
 //            ) {
