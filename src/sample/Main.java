@@ -463,6 +463,10 @@ public class Main extends Application{
         // Move objects and check if they collide with snake
         for (Ball b: ballList
         ) {
+            if(b.getBody().getTranslateY() > 899) {
+                ballList.remove(b);
+            }
+
             if(b.isAlive()){
                 b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
             }
@@ -484,6 +488,10 @@ public class Main extends Application{
         }
         for (Block b: blockList
         ) {
+            if(b.getBody().getTranslateY() > 899) {
+                blockList.remove(b);
+            }
+
             if(b.isAlive()){
                 b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
             }
@@ -505,7 +513,6 @@ public class Main extends Application{
                 else {
                     score += b.getValue();
                     scoreLabel.setText(Integer.toString(score));
-//                    root.getChildren().add(scoreLabel);
                     snake.setLength(snake.getLength() - b.getValue());
                     blockList.remove(b);
                 }
@@ -518,6 +525,9 @@ public class Main extends Application{
 
         for (DestroyBlock db: destroyBlockList
         ) {
+            if(db.getBody().getTranslateY() > 899) {
+                destroyBlockList.remove(db);
+            }
             if(db.isAlive()){
                 db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
             }
@@ -549,6 +559,11 @@ public class Main extends Application{
 
         for (Magnet m: magnetList
         ) {
+            if(m.getBody().getTranslateY() > 899) {
+                m.getBody().setRadius(0);
+                magnetList.remove(m);
+            }
+
             m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5);
             if(m.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
@@ -561,6 +576,10 @@ public class Main extends Application{
 
         for (Shield s: shieldList
         ) {
+            if(s.getBody().getTranslateY() > 899) {
+                shieldList.remove(s);
+            }
+
             s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5);
             if(s.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
@@ -574,6 +593,10 @@ public class Main extends Application{
 
         for (Wall w: wallList
         ) {
+            if(w.getBody().getTranslateY() > 899) {
+                wallList.remove(w);
+            }
+
             if(w.getBody().getTranslateY()+w.getBody().getHeight()+snake.getSnakeBody().get(0).getRadius()==snake.getSnakeBody().get(0).getTranslateY()&&
                     snake.getSnakeBody().get(0).getTranslateX()==w.getBody().getTranslateX()){
                 snake.getSnakeBody().get(0).setTranslateX(snake.getSnakeBody().get(0).getTranslateX()+25);
@@ -731,41 +754,6 @@ public class Main extends Application{
                 shieldList.add(shield);
                 root.getChildren().add(shield.getBody());
             }
-
-//            for (Ball b: ballList
-//            ) {
-//                if(b.isAlive())
-//                    root.getChildren().add(b.getBody());
-//            }
-//
-//            for (Block b: blockList
-//            ) {
-//                if(b.isAlive())
-//                    root.getChildren().add(b.getBody());
-//            }
-//
-//            for (DestroyBlock db: destroyBlockList
-//            ) {
-//                if(db.isAlive())
-//                    root.getChildren().add(db.getBody());
-//            }
-//
-//            for (Magnet m: magnetList
-//            ) {
-//                if(m.isAlive())
-//                    root.getChildren().add(m.getBody());
-//            }
-//
-//            for (Shield s: shieldList
-//            ) {
-//                if(s.isAlive())
-//                    root.getChildren().add(s.getBody());
-//            }
-//
-//            for (Wall w: wallList
-//            ) {
-//                root.getChildren().add(w.getBody());
-//            }
         }
 
     }
