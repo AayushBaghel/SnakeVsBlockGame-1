@@ -13,10 +13,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.paint.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -436,7 +434,7 @@ public class Main extends Application{
             switch(event.getCode()) {
                 case LEFT:{
                     for (Wall w:wallList){
-                        if(snake.getSnakeBody().get(0).getTranslateX()-20==w.getBody().getTranslateX()&&
+                        if(snake.getSnakeBody().get(0).getTranslateX()-25==w.getBody().getTranslateX()&&
                                 w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
                                 w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
@@ -447,7 +445,7 @@ public class Main extends Application{
                 break;
                 case RIGHT:{
                     for (Wall w:wallList){
-                        if(snake.getSnakeBody().get(0).getTranslateX()+20==w.getBody().getTranslateX()&&
+                        if(snake.getSnakeBody().get(0).getTranslateX()+25==w.getBody().getTranslateX()&&
                                 w.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-w.getBody().getHeight() &&
                                 w.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()){
                             return;
@@ -475,12 +473,17 @@ public class Main extends Application{
             if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
                     b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
-                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
-
+                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()) {
                 b.setAlive(false);
                 b.getBody().setVisible(false);
 
                 snake.setLength(snake.getLength() + b.getValue());
+                for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
+                    snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
+                    snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
+                    snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
+                    root.getChildren().add(snake.getSnakeBody().get(i));
+                }
                 ballList.remove(b);
             }
 
@@ -499,7 +502,7 @@ public class Main extends Application{
                 b.getBody().setVisible(false);
                 blockList.remove(b);
             }
-            if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
+            if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight()-snake.getSnakeBody().get(0).getRadius() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
 
@@ -602,7 +605,9 @@ public class Main extends Application{
 
             if(w.getBody().getTranslateY()+w.getBody().getHeight()+snake.getSnakeBody().get(0).getRadius()==snake.getSnakeBody().get(0).getTranslateY()&&
                     snake.getSnakeBody().get(0).getTranslateX()==w.getBody().getTranslateX()){
-                snake.getSnakeBody().get(0).setTranslateX(snake.getSnakeBody().get(0).getTranslateX()+25);
+                for (int i=0;i<snake.getSnakeBody().size();i++){
+                    snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(i).getTranslateX()+25);
+                }
             }
             w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5);
         }
