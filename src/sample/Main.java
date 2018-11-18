@@ -189,8 +189,10 @@ public class Main extends Application{
         snake = new Snake();
 
         // Setting snake head location
-        snake.getSnakeBody().get(0).setTranslateX(250);
-        snake.getSnakeBody().get(0).setTranslateY(450);
+        for(int i=0;i<3;i++){
+            snake.getSnakeBody().get(i).setTranslateX(250);
+            snake.getSnakeBody().get(i).setTranslateY(450+(i*40));
+        }
 
         /*
         Code that should be here:
@@ -259,13 +261,18 @@ public class Main extends Application{
         // Wall
         Wall wall = new Wall();
         wall.getBody().setTranslateX(200);
-        wall.getBody().setTranslateY(50);
+        wall.getBody().setTranslateY(150);
         wallList.add(wall);
 
         Wall wall2 = new Wall();
         wall2.getBody().setTranslateX(400);
-        wall2.getBody().setTranslateY(50);
+        wall2.getBody().setTranslateY(150);
         wallList.add(wall2);
+
+        for (Circle c: snake.getSnakeBody()
+        ) {
+            root.getChildren().add(c);
+        }
 
         for (Ball b: ballList
         ) {
@@ -302,7 +309,7 @@ public class Main extends Application{
             root.getChildren().add(w.getBody());
         }
 
-        root.getChildren().addAll(topBar, layout, snake.getSnakeBody().get(0), label, scoreLabel);
+        root.getChildren().addAll(topBar, layout, label, scoreLabel);
 
         timer = new AnimationTimer() {
             @Override
@@ -494,7 +501,6 @@ public class Main extends Application{
             if(b.getBody().getTranslateY() > 899) {
                 blockList.remove(b);
             }
-
             if(b.isAlive()){
                 b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
             }
@@ -518,14 +524,29 @@ public class Main extends Application{
                     scoreLabel.setText(Integer.toString(score));
                     snake.setLength(snake.getLength() - b.getValue());
                     blockList.remove(b);
+                    System.out.println("Snake Length = "+snake.getLength());
+                    double locX = snake.getSnakeBody().get(0).getTranslateX();
+                    double locY = snake.getSnakeBody().get(0).getTranslateY();
+                    for(int i=0;i<snake.getSnakeBody().size();i++){
+                        snake.getSnakeBody().get(i).setVisible(false);
+                    }
+                    snake.getSnakeBody().clear();
+                    snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
+                    snake.getSnakeBody().get(0).setTranslateX(locX);
+                    snake.getSnakeBody().get(0).setTranslateY(locY);
+                    root.getChildren().add(snake.getSnakeBody().get(0));
+                    for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
+                        snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
+                        snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
+                        snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
+                        root.getChildren().add(snake.getSnakeBody().get(i));
+                    }
                 }
-
                 b.setAlive(false);
                 b.getBody().setVisible(false);
                 blockList.remove(b);
             }
         }
-
         for (DestroyBlock db: destroyBlockList
         ) {
             if(db.getBody().getTranslateY() > 899) {
@@ -663,7 +684,7 @@ public class Main extends Application{
                 if (wallProb <=80) {
                     Wall wall = new Wall();
                     wall.getBody().setTranslateX(100);
-                    wall.getBody().setTranslateY(50);
+                    wall.getBody().setTranslateY(150);
                     wallList.add(wall);
                     root.getChildren().add(wall.getBody());
                 }
@@ -684,7 +705,7 @@ public class Main extends Application{
                 if (wallProb <=80) {
                     Wall wall = new Wall();
                     wall.getBody().setTranslateX(200);
-                    wall.getBody().setTranslateY(50);
+                    wall.getBody().setTranslateY(150);
                     wallList.add(wall);
                     root.getChildren().add(wall.getBody());
                 }
@@ -705,7 +726,7 @@ public class Main extends Application{
                 if (wallProb <=80) {
                     Wall wall = new Wall();
                     wall.getBody().setTranslateX(300);
-                    wall.getBody().setTranslateY(50);
+                    wall.getBody().setTranslateY(150);
                     wallList.add(wall);
                     root.getChildren().add(wall.getBody());
                 }
