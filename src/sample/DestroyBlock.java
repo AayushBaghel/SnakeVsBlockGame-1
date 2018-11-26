@@ -1,7 +1,7 @@
 package sample;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import java.awt.geom.Point2D;
 
@@ -9,7 +9,16 @@ public class DestroyBlock {
     private Point2D velocity;
     private boolean alive = true;
 
-    private Rectangle body = new Rectangle(30 ,30, Color.BLACK);
+    private StackPane body = new StackPane();
+//    private Rectangle body = new Rectangle(30 ,30, Color.BLACK);
+
+    public DestroyBlock(){
+        ImageView img = new ImageView(Main.class.getResource("/DestroyBlocks.png").toString());
+        img.setFitHeight(35);
+        img.setFitWidth(35);
+        body.getChildren().add(img);
+        //pane.getChildren().add(body);
+    }
 
     public boolean isAlive() {
         return alive;
@@ -23,7 +32,7 @@ public class DestroyBlock {
         this.velocity = velocity;
     }
 
-    public Rectangle getBody() {
+    public StackPane getBody() {
         return body;
     }
 }
