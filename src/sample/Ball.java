@@ -7,8 +7,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Ball {
@@ -23,8 +21,7 @@ public class Ball {
         // get random value no.
         Random r = new Random();
         value = r.nextInt(8) + 1;
-
-        body.getChildren().add(new Circle(15, Color.GOLD));
+        body.getChildren().add(new Circle(15, Color.BLUE));
         Text txt = new Text(Integer.toString(value));
         body.getChildren().add(txt);
         body.setAlignment(Pos.CENTER);
