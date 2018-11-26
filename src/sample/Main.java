@@ -13,6 +13,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -44,6 +46,16 @@ public class Main extends Application{
     private List<Wall> wallList = new ArrayList<>();
 
     private double t = 0;
+
+    private static final AudioClip buttonClick = new AudioClip(Main.class.getResource("/buttonselect.wav").toString());
+    private static final AudioClip destroyBlockTaken = new AudioClip(Main.class.getResource("/destroyblock.wav").toString());
+    private static final AudioClip shieldTaken = new AudioClip(Main.class.getResource("/shield.mp3").toString());
+    private static final AudioClip coinTaken = new AudioClip(Main.class.getResource("/coin.wav").toString());
+    private static final AudioClip magnetTaken = new AudioClip(Main.class.getResource("/magnet.wav").toString());
+    private static final AudioClip gameover = new AudioClip(Main.class.getResource("/gameover.wav").toString());
+    private static final AudioClip intro = new AudioClip(Main.class.getResource("/intro.wav").toString());
+    private static final AudioClip pauseClicked = new AudioClip(Main.class.getResource("/pause.wav").toString());
+    private static final AudioClip blockTaken = new AudioClip(Main.class.getResource("/block.wav").toString());
 
     private Parent startScreenContent(){
         root = new Pane();
@@ -79,6 +91,9 @@ public class Main extends Application{
     private Parent createMainMenuContent() {
         root = new Pane();
         root.setPrefSize(500, 900);
+
+        Main.intro.setCycleCount(MediaPlayer.INDEFINITE);
+        Main.intro.play();
 
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
@@ -127,6 +142,7 @@ public class Main extends Application{
 
         LeaderBoardBtnHandlerClass LeaderBoardHandler = new LeaderBoardBtnHandlerClass();
         leaderBoardBtn.setOnAction(LeaderBoardHandler);
+
 
         return root;
     }
@@ -189,6 +205,7 @@ public class Main extends Application{
         snake = new Snake();
 
         // Setting snake head location
+
         for(int i=0;i<3;i++){
             snake.getSnakeBody().get(i).setTranslateX(250);
             snake.getSnakeBody().get(i).setTranslateY(450+(i*40));
@@ -309,7 +326,7 @@ public class Main extends Application{
             root.getChildren().add(w.getBody());
         }
 
-        root.getChildren().addAll(topBar, layout, label, scoreLabel);
+        root.getChildren().addAll(topBar, layout, label, scoreLabel, snake.body);
 
         timer = new AnimationTimer() {
             @Override
@@ -326,8 +343,10 @@ public class Main extends Application{
     }
 
     private void getChoice(ChoiceBox<String> choiceBox) {
+        Main.pauseClicked.play();
         String option = choiceBox.getValue();
         if (option.equals("Start Again")) {
+            Main.pauseClicked.play();
             ballList.clear();
             blockList.clear();
             destroyBlockList.clear();
@@ -349,6 +368,7 @@ public class Main extends Application{
         }
 
         else if (option.equals("Exit to Main Menu")) {
+            Main.pauseClicked.play();
             ballList.clear();
             blockList.clear();
             destroyBlockList.clear();
@@ -481,6 +501,7 @@ public class Main extends Application{
                     b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()) {
+                Main.coinTaken.play();
                 b.setAlive(false);
                 b.getBody().setVisible(false);
 
@@ -511,8 +532,10 @@ public class Main extends Application{
             if(b.getBody().getTranslateY()==snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight()-snake.getSnakeBody().get(0).getRadius() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
-
+                Main.blockTaken.play();
                 if (b.getValue() >= snake.getLength() && b.isAlive()) {
+                    Main.intro.stop();
+                    Main.gameover.play();
                     scene = new Scene(gameOverPageContent());
                     sceneIndicator = "GameOver";
                     stage.setScene(scene);
@@ -564,7 +587,7 @@ public class Main extends Application{
                     db.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+db.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=db.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=db.getBody().getTranslateX()+db.getBody().getWidth()){
-
+                Main.destroyBlockTaken.play();
                 db.setAlive(false);
                 db.getBody().setHeight(0);
                 db.getBody().setWidth(0);
@@ -594,6 +617,7 @@ public class Main extends Application{
                     m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getRadius())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
                     snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())){
+                Main.magnetTaken.play();
                 m.getBody().setRadius(0);
                 m.setAlive(false);
                 magnetList.remove(m);
@@ -611,6 +635,7 @@ public class Main extends Application{
                     s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
                     snake.getSnakeBody().get(0).getTranslateX()<=s.getBody().getTranslateX()+s.getBody().getWidth()){
+                Main.shieldTaken.play();
                 s.getBody().setWidth(0);
                 s.getBody().setHeight(0);
                 s.setAlive(false);
@@ -790,6 +815,7 @@ public class Main extends Application{
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
+            Main.buttonClick.play();
             createGameContent();
             scene = new Scene(createGameContent());
             sceneIndicator = "Game";
@@ -808,6 +834,7 @@ public class Main extends Application{
     class ResumeBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
+            Main.buttonClick.play();
             System.out.println("Resume button clicked");
         }
     }
@@ -815,6 +842,7 @@ public class Main extends Application{
     class LeaderBoardBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
+            Main.buttonClick.play();
             createLeaderBoardContent();
             scene = new Scene(createLeaderBoardContent());
             sceneIndicator = "LeaderBoard";
