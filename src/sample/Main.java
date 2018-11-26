@@ -22,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +40,7 @@ public class Main extends Application{
     private AnimationTimer timer;
 
     private List<Ball> ballList = new ArrayList<>();
+    private List<Coin> coinList = new ArrayList<>();
     private List<Block> blockList = new ArrayList<>();
     private List<DestroyBlock> destroyBlockList = new ArrayList<>();
     private List<Magnet> magnetList = new ArrayList<>();
@@ -231,6 +233,12 @@ public class Main extends Application{
         ball.getBody().setTranslateY(300);
         ballList.add(ball);
 
+        // Coin
+        Coin coin = new Coin();
+        coin.getBody().setTranslateX(250);
+        coin.getBody().setTranslateY(300);
+        coinList.add(coin);
+
         // Block
         Block block1 = new Block();
         block1.getBody().setTranslateX(0);
@@ -297,6 +305,12 @@ public class Main extends Application{
                 root.getChildren().add(b.getBody());
         }
 
+        for (Coin c: coinList
+        ) {
+            if(c.isAlive())
+                root.getChildren().add(c.getBody());
+        }
+
         for (Block b: blockList
         ) {
             if(b.isAlive())
@@ -326,7 +340,7 @@ public class Main extends Application{
             root.getChildren().add(w.getBody());
         }
 
-        root.getChildren().addAll(topBar, layout, label, scoreLabel, snake.body);
+        root.getChildren().addAll(topBar, layout, label, scoreLabel, snake.getSnakePane());
 
         timer = new AnimationTimer() {
             @Override
@@ -347,6 +361,7 @@ public class Main extends Application{
         String option = choiceBox.getValue();
         if (option.equals("Start Again")) {
             Main.pauseClicked.play();
+            coinList.clear();
             ballList.clear();
             blockList.clear();
             destroyBlockList.clear();
@@ -370,6 +385,7 @@ public class Main extends Application{
         else if (option.equals("Exit to Main Menu")) {
             Main.pauseClicked.play();
             ballList.clear();
+            coinList.clear();
             blockList.clear();
             destroyBlockList.clear();
             magnetList.clear();
@@ -440,7 +456,7 @@ public class Main extends Application{
     }
 
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) {
         scene = new Scene(startScreenContent());
         sceneIndicator = "StartScreen";
 
@@ -451,7 +467,7 @@ public class Main extends Application{
         this.stage.show();
 
     }
-    private void update() {
+    private void update() throws ConcurrentModificationException {
         t += 0.016;
 
 
@@ -497,11 +513,10 @@ public class Main extends Application{
             else{
                 b.getBody().setVisible(false);
             }
-            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-b.getBody().getHeight() &&
-                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+b.getBody().getHeight() &&
+            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-b.getBody().getHeight() &&
+                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+b.getBody().getHeight() &&
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()) {
-                Main.coinTaken.play();
                 b.setAlive(false);
                 b.getBody().setVisible(false);
 
@@ -517,6 +532,33 @@ public class Main extends Application{
 
 
         }
+
+        for (Coin c: coinList
+        ) {
+            if(c.getBody().getTranslateY() > 899) {
+                ballList.remove(c);
+            }
+
+            if(c.isAlive()){
+                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5);
+            }
+            else{
+                c.getBody().setVisible(false);
+            }
+            if(c.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-c.getBody().getHeight() &&
+                    c.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+c.getBody().getHeight() &&
+                    snake.getSnakeBody().get(0).getTranslateX()>=c.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=c.getBody().getTranslateX()+c.getBody().getWidth()) {
+                Main.coinTaken.play();
+                c.setAlive(false);
+                c.getBody().setVisible(false);
+                score+=c.getValue();
+                coinList.remove(c);
+            }
+
+
+        }
+
         for (Block b: blockList
         ) {
             if(b.getBody().getTranslateY() > 899) {
@@ -535,6 +577,9 @@ public class Main extends Application{
                 Main.blockTaken.play();
                 if (b.getValue() >= snake.getLength() && b.isAlive()) {
                     Main.intro.stop();
+                    Main.shieldTaken.stop();
+                    Main.magnetTaken.stop();
+                    Main.destroyBlockTaken.stop();
                     Main.gameover.play();
                     scene = new Scene(gameOverPageContent());
                     sceneIndicator = "GameOver";
@@ -579,8 +624,7 @@ public class Main extends Application{
                 db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
             }
             else{
-                db.getBody().setHeight(0);
-                db.getBody().setWidth(0);
+                db.getBody().setVisible(false);
                 destroyBlockList.remove(db);
             }
             if(db.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-db.getBody().getHeight()&&
@@ -588,9 +632,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()>=db.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=db.getBody().getTranslateX()+db.getBody().getWidth()){
                 Main.destroyBlockTaken.play();
+                db.getBody().setVisible(false);
                 db.setAlive(false);
-                db.getBody().setHeight(0);
-                db.getBody().setWidth(0);
                 destroyBlockList.remove(db);
 
                 for (Block b: blockList
@@ -608,17 +651,17 @@ public class Main extends Application{
         for (Magnet m: magnetList
         ) {
             if(m.getBody().getTranslateY() > 899) {
-                m.getBody().setRadius(0);
+                m.getBody().setVisible(false);
                 magnetList.remove(m);
             }
 
             m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5);
-            if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
-                    m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getRadius())&&
-                    snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())&&
-                    snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getRadius())){
+            if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getHeight())&&
+                    m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getHeight())&&
+                    snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())){
                 Main.magnetTaken.play();
-                m.getBody().setRadius(0);
+                m.getBody().setVisible(false);
                 m.setAlive(false);
                 magnetList.remove(m);
             }
@@ -631,13 +674,12 @@ public class Main extends Application{
             }
 
             s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5);
-            if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-s.getBody().getHeight()&&
-                    s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+s.getBody().getHeight()&&
+            if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-s.getBody().getHeight()&&
+                    s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
                     snake.getSnakeBody().get(0).getTranslateX()<=s.getBody().getTranslateX()+s.getBody().getWidth()){
                 Main.shieldTaken.play();
-                s.getBody().setWidth(0);
-                s.getBody().setHeight(0);
+                s.getBody().setVisible(false);
                 s.setAlive(false);
                 shieldList.remove(s);
             }
@@ -671,6 +713,16 @@ public class Main extends Application{
             ball.getBody().setTranslateY(random.nextInt(400) + 30);
             ballList.add(ball);
             root.getChildren().add(ball.getBody());
+        }
+
+        int coinProb = random.nextInt(999) + 1;
+
+        if (coinProb <= 2) {
+            Coin coin = new Coin();
+            coin.getBody().setTranslateX(random.nextInt(440) + 30);
+            coin.getBody().setTranslateY(random.nextInt(400) + 30);
+            coinList.add(coin);
+            root.getChildren().add(coin.getBody());
         }
 
         if (t >= 20) {
