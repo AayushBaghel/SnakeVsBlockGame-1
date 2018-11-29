@@ -553,6 +553,7 @@ public class Main extends Application{
                 c.setAlive(false);
                 c.getBody().setVisible(false);
                 score+=c.getValue();
+                scoreLabel.setText(Integer.toString(score));
                 coinList.remove(c);
             }
 
