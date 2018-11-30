@@ -212,20 +212,8 @@ public class Main extends Application{
             snake.getSnakeBody().get(i).setTranslateX(250);
             snake.getSnakeBody().get(i).setTranslateY(450+(i*40));
         }
-
-        /*
-        Code that should be here:
-        Spawn blocks etc. with certain speed downwards
-
-        blocks - spawn 5 in a single row, each has a 0.8 prob of spawning. If blocks reach certain
-        point (y point is block size away from bottom of screen, spawn new block row. When y point
-        is equal to bottom of screen, remove the blocks that are out of bounds.
-               - Also spawn a wall below each block by a certain probability
-
-        Tokens - spawn with certain probability
-
-        If the snake head's position is out of bounds, game ends
-         */
+        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX()-5);
+        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY()-5);
 
         // Ball
         Ball ball = new Ball();
@@ -259,11 +247,6 @@ public class Main extends Application{
         block4.getBody().setTranslateX(300);
         block4.getBody().setTranslateY(50);
         blockList.add(block4);
-
-        Block block5 = new Block();
-        block5.getBody().setTranslateX(400);
-        block5.getBody().setTranslateY(50);
-        blockList.add(block5);
 
         // Destroy Block
         DestroyBlock dblock = new DestroyBlock();
@@ -470,7 +453,9 @@ public class Main extends Application{
     private void update() throws ConcurrentModificationException {
         t += 0.016;
 
-
+//        snake.updateLengthText();
+//        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
+//        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
 
         // Move snake
         scene.setOnKeyPressed(event -> {
@@ -527,6 +512,7 @@ public class Main extends Application{
                     snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
                     root.getChildren().add(snake.getSnakeBody().get(i));
                 }
+                snake.updateLengthText();
                 ballList.remove(b);
             }
 
@@ -610,6 +596,7 @@ public class Main extends Application{
                         snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
                         root.getChildren().add(snake.getSnakeBody().get(i));
                     }
+                    snake.updateLengthText();
                 }
                 b.setAlive(false);
                 b.getBody().setVisible(false);

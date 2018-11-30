@@ -6,6 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import sun.security.util.Length;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -20,18 +21,20 @@ public class Snake {
 
     private StackPane body = new StackPane();
 
+    private Text lengthText = new Text();
+
     Snake() {
         snakeBody = new ArrayList<>();
         snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
         snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
         snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
         length = 3;
-        Text txt = new Text(Integer.toString(length));
-        txt.setFont(Font.font("Courier New Bold"));
-        body.getChildren().add(txt);
+        updateLengthText();
+        lengthText.setFont(Font.font("Courier New Bold"));
         body.getChildren().add(snakeBody.get(0));
         body.getChildren().add(snakeBody.get(1));
         body.getChildren().add(snakeBody.get(2));
+        body.getChildren().add(lengthText);
         body.setAlignment(Pos.CENTER);
     }
 
@@ -53,6 +56,7 @@ public class Snake {
         ) {
             c.setTranslateX(c.getTranslateX() -25);
         }
+        lengthText.setTranslateX(snakeBody.get(0).getTranslateX()-5);
     }
 
     void moveRight() {
@@ -63,6 +67,16 @@ public class Snake {
         ) {
             c.setTranslateX(c.getTranslateX() + 25);
         }
+//        updateLengthText();
+        lengthText.setTranslateX(snakeBody.get(0).getTranslateX()-5);
+    }
+
+    public void updateLengthText() {
+        lengthText.setText(Integer.toString(length));
+    }
+
+    public Text getLengthText() {
+        return lengthText;
     }
 
     public void setLength(int length) {
