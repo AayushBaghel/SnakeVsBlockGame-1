@@ -47,6 +47,8 @@ public class Main extends Application{
     private List<Shield> shieldList = new ArrayList<>();
     private List<Wall> wallList = new ArrayList<>();
 
+    private List<LeaderBoard> LeaderBoard = new ArrayList<>();
+
     private double t = 0;
 
     private static final AudioClip buttonClick = new AudioClip(Main.class.getResource("/buttonselect.wav").toString());
@@ -58,6 +60,37 @@ public class Main extends Application{
     private static final AudioClip intro = new AudioClip(Main.class.getResource("/intro.wav").toString());
     private static final AudioClip pauseClicked = new AudioClip(Main.class.getResource("/pause.wav").toString());
     private static final AudioClip blockTaken = new AudioClip(Main.class.getResource("/block.wav").toString());
+
+    private void InsertIntoLeaderBoard() {
+        LeaderBoard playerInfo = new LeaderBoard(score);
+
+        if (LeaderBoard.isEmpty()) {
+            LeaderBoard.add(playerInfo);
+        }
+        else if (LeaderBoard.size() == 15){
+            for (int i = 0; i < LeaderBoard.size(); i++) {
+                if (LeaderBoard.get(i).getScore() > score) continue;
+
+                else
+                    LeaderBoard.add(i, playerInfo);
+                LeaderBoard.remove(LeaderBoard.get(14));
+                return;
+            }
+        }
+
+        else {
+            for (int i = 0; i < LeaderBoard.size(); i++) {
+                if (i == LeaderBoard.size() - 1)
+                    LeaderBoard.add(i+1, playerInfo);
+                else
+                    if (LeaderBoard.get(i).getScore() > score) continue;
+
+                    else
+                        LeaderBoard.add(i, playerInfo);
+                return;
+            }
+        }
+    }
 
     private Parent startScreenContent(){
         root = new Pane();
@@ -398,7 +431,22 @@ public class Main extends Application{
         mainMenuBtn.setTranslateX(10);
         mainMenuBtn.setTranslateY(10);
 
-        root.getChildren().addAll(label, mainMenuBtn);
+        Label label1 = new Label("S. No.    Score   Date & Time");
+        label1.layoutXProperty().bind(root.widthProperty().subtract(label1.widthProperty()).divide(2));
+        label1.setTranslateY(200);
+        label1.setFont(new Font("Courier New", 20));
+        label1.setTextFill(Color.WHITE);
+
+        root.getChildren().addAll(label, label1, mainMenuBtn);
+
+        for (int i=0; i < LeaderBoard.size(); i++) {
+            Label label2 = new Label(i+1 + "          " + LeaderBoard.get(i).getScore() + "      " + LeaderBoard.get(i).getDate());
+            label2.layoutXProperty().bind(root.widthProperty().subtract(label1.widthProperty()).divide(2));
+            label2.setTranslateY(250 + 20*i);
+            label2.setFont(new Font("Courier New", 20));
+            label2.setTextFill(Color.WHITE);
+            root.getChildren().add(label2);
+        }
 
         MainMenuBtnHandlerClass mainMenuBtnHandler = new MainMenuBtnHandlerClass();
         mainMenuBtn.setOnAction(mainMenuBtnHandler);
@@ -493,7 +541,7 @@ public class Main extends Application{
             }
 
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -526,7 +574,7 @@ public class Main extends Application{
             }
 
             if(c.isAlive()){
-                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 c.getBody().setVisible(false);
@@ -552,7 +600,7 @@ public class Main extends Application{
                 blockList.remove(b);
             }
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -568,6 +616,7 @@ public class Main extends Application{
                     Main.magnetTaken.stop();
                     Main.destroyBlockTaken.stop();
                     Main.gameover.play();
+                    InsertIntoLeaderBoard();
                     scene = new Scene(gameOverPageContent());
                     sceneIndicator = "GameOver";
                     stage.setScene(scene);
@@ -584,11 +633,16 @@ public class Main extends Application{
                     double locY = snake.getSnakeBody().get(0).getTranslateY();
                     for(int i=0;i<snake.getSnakeBody().size();i++){
                         snake.getSnakeBody().get(i).setVisible(false);
+//                        snake.getSnakeBody().remove(snake.getSnakeBody().get(i));
                     }
+
+//                    b.getBody().setVisible(false);
                     snake.getSnakeBody().clear();
                     snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
                     snake.getSnakeBody().get(0).setTranslateX(locX);
                     snake.getSnakeBody().get(0).setTranslateY(locY);
+//                    snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
+//                    snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
                     root.getChildren().add(snake.getSnakeBody().get(0));
                     for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
                         snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
@@ -609,7 +663,7 @@ public class Main extends Application{
                 destroyBlockList.remove(db);
             }
             if(db.isAlive()){
-                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 db.getBody().setVisible(false);
@@ -643,7 +697,7 @@ public class Main extends Application{
                 magnetList.remove(m);
             }
 
-            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getHeight())&&
                     m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getHeight())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
@@ -661,7 +715,7 @@ public class Main extends Application{
                 shieldList.remove(s);
             }
 
-            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-s.getBody().getHeight()&&
                     s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
@@ -685,7 +739,7 @@ public class Main extends Application{
                     snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(i).getTranslateX()+25);
                 }
             }
-            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
+            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
         }
 
 
@@ -849,7 +903,6 @@ public class Main extends Application{
                 root.getChildren().add(shield.getBody());
             }
         }
-
     }
 
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
