@@ -3,26 +3,19 @@ package sample;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.geom.Point2D;
-
+/**
+ * This is the class used to create the individual wall objects in the game.
+ */
 public class Wall {
-    private int length;
-    private Point2D velocity;
 
+    /**
+     * The body (GUI part) of the wall.
+     */
     private Rectangle body = new Rectangle(5, 200, Color.WHITE);
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public void setVelocity(Point2D velocity) {
-        this.velocity = velocity;
-    }
-
+    /**
+     * The constructor used to create the shield.
+     */
     public Rectangle getBody() {
         return body;
     }

@@ -5,17 +5,31 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-import java.awt.geom.Point2D;
 import java.util.Random;
 
+/**
+ * This is the class used to create the individual ball objects in the game.
+ */
 public class Ball {
+
+    /**
+     * The number by which the length of the snake increases when it eats this ball.
+     */
     private int value;
-    private Point2D velocity;
+
+    /**
+     * The status of the ball.
+     */
     private boolean alive = true;
 
-    StackPane body = new StackPane();
+    /**
+     * The body (GUI part) of the ball.
+     */
+    private StackPane body = new StackPane();
 
+    /**
+     * The constructor used to create the ball.
+     */
     Ball () {
 
         // get random value no.
@@ -28,27 +42,34 @@ public class Ball {
     }
 
 
-
+    /**
+     * Gives the number by which the length of the snake increases when it eats this ball.
+     * @return The number by which the length of the snake increases when it eats this ball.
+     */
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    /**
+     * Gives the status of the ball.
+     * @return The status of the ball.
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Sets the status of the ball.
+     * @param alive The new status of the ball.
+     */
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
 
-    public void setVelocity(Point2D velocity) {
-        this.velocity = velocity;
-    }
-
+    /**
+     * Gives the (GUI) body of the ball.
+     * @return The (GUI) body of the ball.
+     */
     public StackPane getBody() {
         return body;
     }

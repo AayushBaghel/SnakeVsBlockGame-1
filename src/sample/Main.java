@@ -26,49 +26,201 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * <h1>Snake Vs. Block Game</h1>
+ * This is a 2D game made using JavaFX. You play as snake. The objective is to collect coins and break blocks to increase
+ * your score. If you encounter a block, you loose as much in length as you gain in points, so you need to collect balls
+ * to keep your length up. If your length reaches zero, you die.
+ *
+ * The game includes four tokens (power-ups):-
+ * 1. Shield - Gives you invincibility from damage from blocks for a few seconds.
+ * 2. Magnet - Automatically catches nearby balls and coins for you for a few seconds.
+ * 3. Destroy block - Destroys all on-screen blocks and adds their values to your score.
+ *
+ * The game also includes walls which are impenetrable and immovable objects.
+ *
+ * The Main class is the heart of the program. Both the GUI and the non-GUI aspects of the game are managed here. All the pages are
+ * created here and all the interactions between the user and game as well as between the game objects and other game objects
+ * are handled of here.
+ *
+ * @author Jaspreet Singh Marwah, Aayush Baghel
+ * @since 2018-11-01
+ *
+ */
+
 public class Main extends Application{
 
+    /**
+     * The current score of the player
+     */
     private int score = 0;
+
+    /**
+     * A label used to store and display the current score
+     */
     private Label scoreLabel;
+
+    /**
+     * A label used to store and display the current length of the snake
+     */
     private Label lengthLabel;
 
+    /**
+     * The pane used throughout the program
+     */
     private Pane root;
+
+    /**
+     * The stage used throughout the program
+     */
     private Stage stage;
+
+    /**
+     * The scene used throughout the program
+     */
     private Scene scene;
+
+    /**
+     * A variable used to indicate what the current scene is
+     */
     private String sceneIndicator;
+
+    /**
+     * The snake object
+     */
     private Snake snake = new Snake();
-    private javafx.scene.control.Button closeButton;
+
+    /**
+     * A timer that is used to continuously call the update() function while the game is running.
+     */
     private AnimationTimer timer;
 
+    /**
+     * A list containing all the balls present in the game.
+     */
     private List<Ball> ballList = new ArrayList<>();
+
+    /**
+     * A list containing all the coins present in the game.
+     */
     private List<Coin> coinList = new ArrayList<>();
+
+    /**
+     * A list containing all the blocks present in the game.
+     */
     private List<Block> blockList = new ArrayList<>();
+
+    /**
+     * A list containing all the destroy blocks present in the game.
+     */
     private List<DestroyBlock> destroyBlockList = new ArrayList<>();
+
+    /**
+     * A list containing all the magnets present in the game.
+     */
     private List<Magnet> magnetList = new ArrayList<>();
+
+    /**
+     * A list containing all the shields present in the game.
+     */
     private List<Shield> shieldList = new ArrayList<>();
+
+    /**
+     * A list containing all the walls present in the game.
+     */
     private List<Wall> wallList = new ArrayList<>();
 
+    /**
+     * A list containing all leader board entries.
+     */
     private List<LeaderBoard> LeaderBoard = new ArrayList<>();
 
+    /**
+     * A variable used as a timer to keep track of time in the update function.
+     */
     private double t = 0;
 
+    /**
+     * A variable used to check if the snake has encountered a block of value greater than 5.
+     */
     private boolean blockEncountered = false;
+
+    /**
+     * A variable used as a timer to see how long its been since we encountered a block of value greater than 5 (so that
+     * we can stop the snake accordingly for the correct duration of time).
+     */
     private double tBlock = 0;
+
+    /**
+     * A variable used to check if the snake has encountered a shield.
+     */
     private boolean shieldEncountered = false;
+
+    /**
+     * A variable used as a timer to see how long its been since we encountered a shield (so that we can activate the
+     * shield power-up accordingly for the correct duration of time).
+     */
     private double tShield = 0;
+
+    /**
+     * A variable used to check if the snake has encountered a magnet.
+     */
     private boolean magnetEncountered = false;
+
+    /**
+     * A variable used as a timer to see how long its been since we encountered a magnet (so that we can activate the
+     * magnet power-up accordingly for the correct duration of time).
+     */
     private double tMagnet = 0;
 
+    /**
+     * Audio clip to store the sound made when we click on a button.
+     */
     private static final AudioClip buttonClick = new AudioClip(Main.class.getResource("/buttonselect.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we encounter a destroy block.
+     */
     private static final AudioClip destroyBlockTaken = new AudioClip(Main.class.getResource("/destroyblock.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we encounter a shield.
+     */
     private static final AudioClip shieldTaken = new AudioClip(Main.class.getResource("/shield.mp3").toString());
+
+    /**
+     * Audio clip to store the sound made when we encounter a coin.
+     */
     private static final AudioClip coinTaken = new AudioClip(Main.class.getResource("/coin.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we encounter a magnet.
+     */
     private static final AudioClip magnetTaken = new AudioClip(Main.class.getResource("/magnet.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when our snake dies.
+     */
     private static final AudioClip gameover = new AudioClip(Main.class.getResource("/gameover.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we start the game.
+     */
     private static final AudioClip intro = new AudioClip(Main.class.getResource("/intro.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we click on the drop down menu inside the game.
+     */
     private static final AudioClip pauseClicked = new AudioClip(Main.class.getResource("/pause.wav").toString());
+
+    /**
+     * Audio clip to store the sound made when we break a block.
+     */
     private static final AudioClip blockTaken = new AudioClip(Main.class.getResource("/block.wav").toString());
 
+    /**
+     * A function used to make an entry into the leader board if the score is good enough.
+     */
     private void InsertIntoLeaderBoard() {
         LeaderBoard playerInfo = new LeaderBoard(score);
 
@@ -100,6 +252,10 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * A function to create the start screen.
+     * @return The pane used throughout the game.
+     */
     private Parent startScreenContent(){
         root = new Pane();
         root.setPrefSize(500,900);
@@ -131,6 +287,11 @@ public class Main extends Application{
         return root;
     }
 
+    /**
+     * A function to create the main menu where you can choose to play the game, resume the previous game, or access the
+     * leader board.
+     * @return The pane used throughout the game.
+     */
     private Parent createMainMenuContent() {
         root = new Pane();
         root.setPrefSize(500, 900);
@@ -190,8 +351,10 @@ public class Main extends Application{
         return root;
     }
 
-    // Game Contents
-
+    /**
+     * A function to create the setup for the main game.
+     * @return The pane used throughout the game.
+     */
     private Parent createGameContent() {
         ballList.clear();
         blockList.clear();
@@ -393,6 +556,10 @@ public class Main extends Application{
         return root;
     }
 
+    /**
+     * A function to handle whatever option is chosen from the drop down menu in the game.
+     * @param choiceBox The drop down menu.
+     */
     private void getChoice(ChoiceBox<String> choiceBox) {
         Main.pauseClicked.play();
         String option = choiceBox.getValue();
@@ -436,6 +603,10 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * A function to create the leader board page where you can see the top 15 scores.
+     * @return The pane used throughout the game.
+     */
     private Parent createLeaderBoardContent() {
         root = new Pane();
         root.setPrefSize(500, 900);
@@ -475,8 +646,10 @@ public class Main extends Application{
         return root;
     }
 
-    // Game Over Page to display the final score.
-
+    /**
+     * A function to display the game over page where the final score is shown.
+     * @return The pane used throughout the game.
+     */
     private Parent gameOverPageContent() {
         root = new Pane();
         root.setPrefSize(500, 900);
@@ -507,6 +680,10 @@ public class Main extends Application{
         return root;
     }
 
+    /**
+     * The first function to execute in this JavaFX program.
+     * @param stage The stage variable  that is used throughout the program.
+     */
     @Override
     public void start(Stage stage) {
         scene = new Scene(startScreenContent());
@@ -519,6 +696,11 @@ public class Main extends Application{
         this.stage.show();
 
     }
+
+    /**
+     * The function that checks and updates the status of each game object.
+     * @throws ConcurrentModificationException
+     */
     private void update() throws ConcurrentModificationException {
         t += 0.016;
 
@@ -621,7 +803,7 @@ public class Main extends Application{
         for (Coin c: coinList
         ) {
             if(c.getBody().getTranslateY() > 899) {
-                ballList.remove(c);
+                coinList.remove(c);
             }
 
             if(c.isAlive()){
@@ -981,6 +1163,9 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * This class handles the event in which the start button is pressed.
+     */
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
@@ -1000,6 +1185,9 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * This class handles the event in which the resume button is pressed.
+     */
     class ResumeBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
@@ -1008,6 +1196,9 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * This class handles the event in which the leader board button is pressed.
+     */
     class LeaderBoardBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {
@@ -1020,6 +1211,9 @@ public class Main extends Application{
         }
     }
 
+    /**
+     * This class handles the event in which the main menu button is pressed.
+     */
     class MainMenuBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent e) {

@@ -3,27 +3,36 @@ package sample;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
+/**
+ * This is the class used to create the individual block objects in the game.
+ */
 public class Block {
+
+    /**
+     * The number by which the score increases and the length of the snake deceases when it eats this ball.
+     */
     private int value;
-    private Point2D velocity;
+
+    /**
+     * The status of the block.
+     */
     private boolean alive = true;
-//    private Rectangle body = new Rectangle(100, 100);
 
-    StackPane body = new StackPane();
+    /**
+     * The body (GUI part) of the destroy block.
+     */
+    private StackPane body = new StackPane();
 
+    /**
+     * The constructor used to create the block.
+     */
     Block() {
-//        body = defineBody(body);
-
         Random r = new Random();
         value = r.nextInt(8) + 1;
 
@@ -38,6 +47,10 @@ public class Block {
 
     }
 
+    /**
+     * The constructor used to create the block given a certain upper limit for the block's value.
+     * @param i The upper limit of the block's value.
+     */
     Block(int i) {
         Random r = new Random();
         value = r.nextInt(i-1) + 1;
@@ -52,6 +65,11 @@ public class Block {
         body.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * A function That sets the size and color of the block.
+     * @param body The body of the block.
+     * @return The body of the block.
+     */
     private Rectangle defineBody(Rectangle body) {
         body.setArcHeight(40);
         body.setArcWidth(40);
@@ -73,26 +91,34 @@ public class Block {
         return body;
     }
 
+    /**
+     * Gives the number by which the score increases and the length of the snake decreases when it eats this block.
+     * @return The number by which the score increases and the length of the snake decreases when it eats this block.
+     */
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    /**
+     * Gives the status of the block.
+     * @return The status of the block.
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Sets the status of the block.
+     * @param alive The new status of the block.
+     */
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
 
-    public void setVelocity(Point2D velocity) {
-        this.velocity = velocity;
-    }
-
+    /**
+     * Gives the (GUI) body of the block.
+     * @return The (GUI) body of the block.
+     */
     public StackPane getBody() {
         return body;
     }

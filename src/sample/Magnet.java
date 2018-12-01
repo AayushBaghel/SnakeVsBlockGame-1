@@ -3,15 +3,23 @@ package sample;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
-import java.awt.geom.Point2D;
-
+/**
+ * This is the class used to create the individual magnet objects in the game.
+ */
 public class Magnet {
-    private Point2D velocity;
+    /**
+     * The status of the magnet.
+     */
     private boolean alive = true;
 
+    /**
+     * The body (GUI part) of the magnet.
+     */
     private StackPane body = new StackPane();
-    //private Circle body = new Circle(10, Color.RED);
 
+    /**
+     * The constructor used to create the magnet.
+     */
     public Magnet(){
         ImageView img = new ImageView(Main.class.getResource("/Magnet.png").toString());
         img.setFitHeight(35);
@@ -19,18 +27,26 @@ public class Magnet {
         body.getChildren().add(img);
     }
 
+    /**
+     * Gives the status of the magnet.
+     * @return The status of the magnet.
+     */
     public boolean isAlive() {
         return alive;
     }
 
+    /**
+     * Sets the status of the magnet.
+     * @param alive The new status of the magnet.
+     */
     public void setAlive (boolean alive) {
         this.alive = alive;
     }
 
-    public void setVelocity(Point2D velocity) {
-        this.velocity = velocity;
-    }
-
+    /**
+     * Gives the (GUI) body of the magnet.
+     * @return The (GUI) body of the magnet.
+     */
     public StackPane getBody() {
         return body;
     }
