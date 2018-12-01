@@ -30,6 +30,7 @@ public class Main extends Application{
 
     private int score = 0;
     private Label scoreLabel;
+    private Label lengthLabel;
 
     private Pane root;
     private Stage stage;
@@ -213,6 +214,19 @@ public class Main extends Application{
         label.setFont(new Font("Courier New", 20));
         label.setTextFill(Color.WHITE);
 
+        // Snake length
+        lengthLabel = new Label(Integer.toString(snake.getLength()));
+        lengthLabel.setFont(new Font("Courier New", 20));
+        lengthLabel.layoutXProperty().bind(root.widthProperty().subtract(lengthLabel.widthProperty()));
+        lengthLabel.setTranslateY(scoreLabel.getTranslateY()+20);
+        lengthLabel.setTextFill(Color.WHITE);
+
+        Label label1 = new Label("Length: ");
+        label1.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).subtract(label.widthProperty()));
+        label1.setTranslateY(label.getTranslateY()+20);
+        label1.setFont(new Font("Courier New", 20));
+        label1.setTextFill(Color.WHITE);
+
         // Drop down menu
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
@@ -359,7 +373,7 @@ public class Main extends Application{
             root.getChildren().add(w.getBody());
         }
 
-        root.getChildren().addAll(topBar, layout, label, scoreLabel, snake.getSnakePane());
+        root.getChildren().addAll(topBar, layout, label, label1, scoreLabel, snake.getSnakePane(), lengthLabel);
 
         timer = new AnimationTimer() {
             @Override
@@ -572,6 +586,7 @@ public class Main extends Application{
                     snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
                     root.getChildren().add(snake.getSnakeBody().get(i));
                 }
+                lengthLabel.setText(Integer.toString(snake.getLength()));
                 snake.updateLengthText();
                 ballList.remove(b);
             }
@@ -666,6 +681,7 @@ public class Main extends Application{
                         snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
                         root.getChildren().add(snake.getSnakeBody().get(i));
                     }
+                    lengthLabel.setText(Integer.toString(snake.getLength()));
                     snake.updateLengthText();
                 }
                 b.setAlive(false);
