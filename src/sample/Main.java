@@ -51,6 +51,9 @@ public class Main extends Application{
 
     private double t = 0;
 
+    private boolean blockEncountered = false;
+    private double tBlock = 0;
+
     private static final AudioClip buttonClick = new AudioClip(Main.class.getResource("/buttonselect.wav").toString());
     private static final AudioClip destroyBlockTaken = new AudioClip(Main.class.getResource("/destroyblock.wav").toString());
     private static final AudioClip shieldTaken = new AudioClip(Main.class.getResource("/shield.mp3").toString());
@@ -501,6 +504,14 @@ public class Main extends Application{
     private void update() throws ConcurrentModificationException {
         t += 0.016;
 
+        if (blockEncountered) {
+            tBlock += 0.016;
+            if (tBlock > 5) {
+                tBlock = 0;
+                blockEncountered = false;
+            }
+        }
+
 //        snake.updateLengthText();
 //        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
 //        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
@@ -541,7 +552,8 @@ public class Main extends Application{
             }
 
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+                if (!blockEncountered)
+                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -574,7 +586,8 @@ public class Main extends Application{
             }
 
             if(c.isAlive()){
-                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+                if (!blockEncountered)
+                    c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 c.getBody().setVisible(false);
@@ -600,7 +613,8 @@ public class Main extends Application{
                 blockList.remove(b);
             }
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+                if (!blockEncountered)
+                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -624,6 +638,8 @@ public class Main extends Application{
                     timer.stop();
                 }
                 else {
+                    if (b.getValue() > 5)
+                        blockEncountered = true;
                     score += b.getValue();
                     scoreLabel.setText(Integer.toString(score));
                     snake.setLength(snake.getLength() - b.getValue());
@@ -663,7 +679,8 @@ public class Main extends Application{
                 destroyBlockList.remove(db);
             }
             if(db.isAlive()){
-                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+                if (!blockEncountered)
+                    db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             }
             else{
                 db.getBody().setVisible(false);
@@ -696,8 +713,8 @@ public class Main extends Application{
                 m.getBody().setVisible(false);
                 magnetList.remove(m);
             }
-
-            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+            if (!blockEncountered)
+                m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getHeight())&&
                     m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getHeight())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
@@ -714,8 +731,8 @@ public class Main extends Application{
             if(s.getBody().getTranslateY() > 899) {
                 shieldList.remove(s);
             }
-
-            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+            if (!blockEncountered)
+                s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
             if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-s.getBody().getHeight()&&
                     s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
@@ -739,7 +756,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(i).getTranslateX()+25);
                 }
             }
-            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
+            if (!blockEncountered)
+                w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5); //*(1+snake.getLength()/5)
         }
 
 
