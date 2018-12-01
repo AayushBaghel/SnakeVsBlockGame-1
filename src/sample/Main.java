@@ -493,7 +493,7 @@ public class Main extends Application{
             }
 
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             }
             else{
                 b.getBody().setVisible(false);
@@ -526,7 +526,7 @@ public class Main extends Application{
             }
 
             if(c.isAlive()){
-                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5);
+                c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             }
             else{
                 c.getBody().setVisible(false);
@@ -552,7 +552,7 @@ public class Main extends Application{
                 blockList.remove(b);
             }
             if(b.isAlive()){
-                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5);
+                b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             }
             else{
                 b.getBody().setVisible(false);
@@ -609,7 +609,7 @@ public class Main extends Application{
                 destroyBlockList.remove(db);
             }
             if(db.isAlive()){
-                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5);
+                db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             }
             else{
                 db.getBody().setVisible(false);
@@ -643,7 +643,7 @@ public class Main extends Application{
                 magnetList.remove(m);
             }
 
-            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5);
+            m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getHeight())&&
                     m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getHeight())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
@@ -661,7 +661,7 @@ public class Main extends Application{
                 shieldList.remove(s);
             }
 
-            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5);
+            s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
             if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-s.getBody().getHeight()&&
                     s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
@@ -685,7 +685,7 @@ public class Main extends Application{
                     snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(i).getTranslateX()+25);
                 }
             }
-            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5);
+            w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5*(snake.getLength()/5));
         }
 
 

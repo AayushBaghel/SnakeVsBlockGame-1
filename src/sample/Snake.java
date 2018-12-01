@@ -30,7 +30,6 @@ public class Snake {
         snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
         length = 3;
         updateLengthText();
-        lengthText.setFont(Font.font("Courier New Bold"));
         body.getChildren().add(snakeBody.get(0));
         body.getChildren().add(snakeBody.get(1));
         body.getChildren().add(snakeBody.get(2));
