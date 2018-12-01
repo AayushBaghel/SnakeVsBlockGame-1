@@ -54,6 +54,10 @@ public class Main extends Application{
 
     private boolean blockEncountered = false;
     private double tBlock = 0;
+    private boolean shieldEncountered = false;
+    private double tShield = 0;
+    private boolean magnetEncountered = false;
+    private double tMagnet = 0;
 
     private static final AudioClip buttonClick = new AudioClip(Main.class.getResource("/buttonselect.wav").toString());
     private static final AudioClip destroyBlockTaken = new AudioClip(Main.class.getResource("/destroyblock.wav").toString());
@@ -526,6 +530,22 @@ public class Main extends Application{
             }
         }
 
+        if (shieldEncountered) {
+            tShield += 0.016;
+            if (tShield > 40) {
+                tShield = 0;
+                shieldEncountered = false;
+            }
+        }
+
+        if (magnetEncountered) {
+            tMagnet += 0.016;
+            if (tMagnet > 40) {
+                tMagnet = 0;
+                magnetEncountered = false;
+            }
+        }
+
 //        snake.updateLengthText();
 //        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
 //        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
@@ -572,10 +592,14 @@ public class Main extends Application{
             else{
                 b.getBody().setVisible(false);
             }
-            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-b.getBody().getHeight() &&
-                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+b.getBody().getHeight() &&
-                    snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
-                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()) {
+            int powerup = 0;
+            if (magnetEncountered) {
+                powerup = 70;
+            }
+            if(b.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-b.getBody().getHeight()-powerup &&
+                    b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+b.getBody().getHeight()+powerup &&
+                    snake.getSnakeBody().get(0).getTranslateX()+powerup>=b.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()+powerup)  {
                 b.setAlive(false);
                 b.getBody().setVisible(false);
 
@@ -607,10 +631,14 @@ public class Main extends Application{
             else{
                 c.getBody().setVisible(false);
             }
-            if(c.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-c.getBody().getHeight() &&
-                    c.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+c.getBody().getHeight() &&
-                    snake.getSnakeBody().get(0).getTranslateX()>=c.getBody().getTranslateX()&&
-                    snake.getSnakeBody().get(0).getTranslateX()<=c.getBody().getTranslateX()+c.getBody().getWidth()) {
+            int powerup = 0;
+            if (magnetEncountered) {
+                powerup = 70;
+            }
+            if(c.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-c.getBody().getHeight()-powerup &&
+                    c.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+c.getBody().getHeight()+powerup &&
+                    snake.getSnakeBody().get(0).getTranslateX()+powerup>=c.getBody().getTranslateX()&&
+                    snake.getSnakeBody().get(0).getTranslateX()<=c.getBody().getTranslateX()+c.getBody().getWidth()+powerup) {
                 Main.coinTaken.play();
                 c.setAlive(false);
                 c.getBody().setVisible(false);
@@ -639,54 +667,64 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()){
                 Main.blockTaken.play();
-                if (b.getValue() >= snake.getLength() && b.isAlive()) {
-                    Main.intro.stop();
-                    Main.shieldTaken.stop();
-                    Main.magnetTaken.stop();
-                    Main.destroyBlockTaken.stop();
-                    Main.gameover.play();
-                    InsertIntoLeaderBoard();
-                    scene = new Scene(gameOverPageContent());
-                    sceneIndicator = "GameOver";
-                    stage.setScene(scene);
-                    stage.show();
-                    timer.stop();
-                }
-                else {
-                    if (b.getValue() > 5)
-                        blockEncountered = true;
-                    score += b.getValue();
-                    scoreLabel.setText(Integer.toString(score));
-                    snake.setLength(snake.getLength() - b.getValue());
-                    blockList.remove(b);
-                    System.out.println("Snake Length = "+snake.getLength());
-                    double locX = snake.getSnakeBody().get(0).getTranslateX();
-                    double locY = snake.getSnakeBody().get(0).getTranslateY();
-                    for(int i=0;i<snake.getSnakeBody().size();i++){
-                        snake.getSnakeBody().get(i).setVisible(false);
-//                        snake.getSnakeBody().remove(snake.getSnakeBody().get(i));
+                if (!shieldEncountered) {
+                    if (b.getValue() >= snake.getLength() && b.isAlive()) {
+                        Main.intro.stop();
+                        Main.shieldTaken.stop();
+                        Main.magnetTaken.stop();
+                        Main.destroyBlockTaken.stop();
+                        Main.gameover.play();
+                        InsertIntoLeaderBoard();
+                        scene = new Scene(gameOverPageContent());
+                        sceneIndicator = "GameOver";
+                        stage.setScene(scene);
+                        stage.show();
+                        timer.stop();
                     }
+                    else {
+                        if (b.getValue() > 5)
+                            blockEncountered = true;
+                        score += b.getValue();
+                        scoreLabel.setText(Integer.toString(score));
+                        snake.setLength(snake.getLength() - b.getValue());
+                        blockList.remove(b);
+                        System.out.println("Snake Length = "+snake.getLength());
+                        double locX = snake.getSnakeBody().get(0).getTranslateX();
+                        double locY = snake.getSnakeBody().get(0).getTranslateY();
+                        for(int i=0;i<snake.getSnakeBody().size();i++){
+                            snake.getSnakeBody().get(i).setVisible(false);
+//                        snake.getSnakeBody().remove(snake.getSnakeBody().get(i));
+                        }
 
 //                    b.getBody().setVisible(false);
-                    snake.getSnakeBody().clear();
-                    snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
-                    snake.getSnakeBody().get(0).setTranslateX(locX);
-                    snake.getSnakeBody().get(0).setTranslateY(locY);
+                        snake.getSnakeBody().clear();
+                        snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
+                        snake.getSnakeBody().get(0).setTranslateX(locX);
+                        snake.getSnakeBody().get(0).setTranslateY(locY);
 //                    snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
 //                    snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
-                    root.getChildren().add(snake.getSnakeBody().get(0));
-                    for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
-                        snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
-                        snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
-                        snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
-                        root.getChildren().add(snake.getSnakeBody().get(i));
+                        root.getChildren().add(snake.getSnakeBody().get(0));
+                        for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
+                            snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
+                            snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
+                            snake.getSnakeBody().get(i).setTranslateY(450+(40*i));
+                            root.getChildren().add(snake.getSnakeBody().get(i));
+                        }
+                        lengthLabel.setText(Integer.toString(snake.getLength()));
+                        snake.updateLengthText();
                     }
-                    lengthLabel.setText(Integer.toString(snake.getLength()));
-                    snake.updateLengthText();
+                    b.setAlive(false);
+                    b.getBody().setVisible(false);
+                    blockList.remove(b);
                 }
-                b.setAlive(false);
-                b.getBody().setVisible(false);
-                blockList.remove(b);
+                else {
+                    score += b.getValue();
+                    scoreLabel.setText(Integer.toString(score));
+                    blockList.remove(b);
+                    b.setAlive(false);
+                    b.getBody().setVisible(false);
+                }
+
             }
         }
         for (DestroyBlock db: destroyBlockList
@@ -736,6 +774,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
                     snake.getSnakeBody().get(0).getTranslateX()<=m.getBody().getTranslateX()+(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())){
                 Main.magnetTaken.play();
+                magnetEncountered = true;
+                tMagnet = 0;
                 m.getBody().setVisible(false);
                 m.setAlive(false);
                 magnetList.remove(m);
@@ -754,6 +794,8 @@ public class Main extends Application{
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
                     snake.getSnakeBody().get(0).getTranslateX()<=s.getBody().getTranslateX()+s.getBody().getWidth()){
                 Main.shieldTaken.play();
+                shieldEncountered = true;
+                tShield = 0;
                 s.getBody().setVisible(false);
                 s.setAlive(false);
                 shieldList.remove(s);
