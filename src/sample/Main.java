@@ -20,13 +20,19 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import sun.security.util.Length;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 
 /**
+ * The Main class is the heart of the program. Both the GUI and the non-GUI aspects of the game are managed here. All the pages are
+ * created here and all the interactions between the user and game as well as between the game objects and other game objects
+ * are handled of here.
+ *
  * <h1>Snake Vs. Block Game</h1>
  * This is a 2D game made using JavaFX. You play as snake. The objective is to collect coins and break blocks to increase
  * your score. If you encounter a block, you loose as much in length as you gain in points, so you need to collect balls
@@ -39,16 +45,105 @@ import java.util.Random;
  *
  * The game also includes walls which are impenetrable and immovable objects.
  *
- * The Main class is the heart of the program. Both the GUI and the non-GUI aspects of the game are managed here. All the pages are
- * created here and all the interactions between the user and game as well as between the game objects and other game objects
- * are handled of here.
- *
  * @author Jaspreet Singh Marwah, Aayush Baghel
  * @since 2018-11-01
  *
  */
 
-public class Main extends Application{
+public class Main extends Application {
+
+    /**
+     * Saves the current state of the leader board in an external file.
+     * @param LeaderBoard A list that contains the leader board.
+     * @throws IOException
+     */
+    public static void serializeLeaderBoard(List<LeaderBoard> LeaderBoard) throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream( new FileOutputStream("LeaderBoardOut.txt"));
+            out.writeObject(LeaderBoard);
+        } finally {
+            out.close();
+        }
+    }
+
+    /**
+     * Saves the current score in an external file.
+     * @param Score The current score.
+     * @throws IOException
+     */
+    public static void serializeScore(int Score) throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream( new FileOutputStream("ScoreOut.txt"));
+            out.writeObject(Score);
+        } finally {
+            out.close();
+        }
+    }
+
+    /**
+     * Saves the current length of the snake in an external file.
+     * @param Length The current length of the snake.
+     * @throws IOException
+     */
+    public static void serializeLength(int Length) throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream( new FileOutputStream("LengthOut.txt"));
+            out.writeObject(Length);
+        } finally {
+            out.close();
+        }
+    }
+
+    /**
+     * Retrieves the last saved state of the leader board.
+     * @return The last saved state of the leader board.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static List<LeaderBoard> deserialzeLeaderBoard() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream("LeaderBoardOut.txt"));
+            return (List<LeaderBoard>) in.readObject();
+        } finally {
+            in.close();
+        }
+    }
+
+    /**
+     * Retrieves the last saved state of the score.
+     * @return The last saved state of the score.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static int deserialzeScore() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream("ScoreOut.txt"));
+            return (int) in.readObject();
+        } finally {
+            in.close();
+        }
+    }
+
+    /**
+     * Retrieves the last saved state of the snake length.
+     * @return The last saved state of the snake length.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static int deserialzeLength() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream("LengthOut.txt"));
+            return (int) in.readObject();
+        } finally {
+            in.close();
+        }
+    }
 
     /**
      * The current score of the player
@@ -220,8 +315,9 @@ public class Main extends Application{
 
     /**
      * A function used to make an entry into the leader board if the score is good enough.
+     * @throws IOException
      */
-    private void InsertIntoLeaderBoard() {
+    private void InsertIntoLeaderBoard() throws IOException {
         LeaderBoard playerInfo = new LeaderBoard(score);
 
         if (LeaderBoard.isEmpty()) {
@@ -250,6 +346,7 @@ public class Main extends Application{
                 return;
             }
         }
+        serializeLeaderBoard(LeaderBoard);
     }
 
     /**
@@ -354,8 +451,9 @@ public class Main extends Application{
     /**
      * A function to create the setup for the main game.
      * @return The pane used throughout the game.
+     * @throws IOException
      */
-    private Parent createGameContent() {
+    private Parent createGameContent() throws IOException {
         ballList.clear();
         blockList.clear();
         destroyBlockList.clear();
@@ -364,7 +462,9 @@ public class Main extends Application{
         wallList.clear();
         score = 0;
         t = 0;
-        snake.setLength(1);
+        snake.setLength(3);
+
+        serializeLength(snake.getLength());
 
         root = new Pane();
         root.setPrefSize(500, 900);
@@ -403,7 +503,13 @@ public class Main extends Application{
         Button choiceConfirmBtn = new Button("Confirm");
         choiceConfirmBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
 
-        choiceConfirmBtn.setOnAction(e -> getChoice(choiceBox));
+        choiceConfirmBtn.setOnAction(e -> {
+            try {
+                getChoice(choiceBox);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20,20,20,20));
@@ -546,7 +652,242 @@ public class Main extends Application{
             @Override
             public void handle(long now) {
                 if (sceneIndicator.equals("Game")) {
-                    update();
+                    try {
+                        update();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        timer.start();
+
+        return root;
+    }
+
+    /**
+     * A function to create the setup for the main game when the player wants to resume their previous game.
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private Parent createResumeGameContent() throws IOException, ClassNotFoundException {
+        ballList.clear();
+        blockList.clear();
+        destroyBlockList.clear();
+        magnetList.clear();
+        shieldList.clear();
+        wallList.clear();
+        try {
+            score = deserialzeScore();
+        } catch (IOException e) {
+            score = 0;
+        } catch (ClassNotFoundException e) {
+            score = 0;
+        }
+
+        t = 0;
+
+        try {
+            snake.setLength(deserialzeLength());
+        } catch (IOException e) {
+            snake.setLength(3);
+        } catch (ClassNotFoundException e) {
+            snake.setLength(3);
+        }
+
+        root = new Pane();
+        root.setPrefSize(500, 900);
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
+
+        // Score
+        scoreLabel = new Label(Integer.toString(score));
+        scoreLabel.setFont(new Font("Courier New", 20));
+        scoreLabel.layoutXProperty().bind(root.widthProperty().subtract(scoreLabel.widthProperty()));
+        scoreLabel.setTextFill(Color.WHITE);
+
+        Label label = new Label("Score: ");
+        label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).subtract(label.widthProperty()));
+        label.setFont(new Font("Courier New", 20));
+        label.setTextFill(Color.WHITE);
+
+        // Snake length
+        lengthLabel = new Label(Integer.toString(snake.getLength()));
+        lengthLabel.setFont(new Font("Courier New", 20));
+        lengthLabel.layoutXProperty().bind(root.widthProperty().subtract(lengthLabel.widthProperty()));
+        lengthLabel.setTranslateY(scoreLabel.getTranslateY()+20);
+        lengthLabel.setTextFill(Color.WHITE);
+
+        Label label1 = new Label("Length: ");
+        label1.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).subtract(label.widthProperty()));
+        label1.setTranslateY(label.getTranslateY()+20);
+        label1.setFont(new Font("Courier New", 20));
+        label1.setTextFill(Color.WHITE);
+
+        // Drop down menu
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+        choiceBox.getItems().addAll("Options:","Start Again", "Exit to Main Menu");
+        choiceBox.setValue("Options:");
+
+        Button choiceConfirmBtn = new Button("Confirm");
+        choiceConfirmBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
+
+        choiceConfirmBtn.setOnAction(e -> {
+            try {
+                getChoice(choiceBox);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20,20,20,20));
+        layout.getChildren().addAll(choiceBox, choiceConfirmBtn);
+
+        Rectangle topBar = new Rectangle(500, 120);
+        Stop[] stops = new Stop[] { new Stop(0, Color.web("#190236")), new Stop(1, Color.web("#7851A9"))};
+        LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+
+        topBar.setFill(lg1);
+
+        topBar.setTranslateX(0);
+        topBar.setTranslateY(0);
+
+        // Game
+
+        int x = snake.getLength();
+        // Snake code
+        snake = new Snake(x);
+
+        // Setting snake head location
+        for(int i=0;i<snake.getLength();i++){
+            snake.getSnakeBody().get(i).setTranslateX(250);
+            snake.getSnakeBody().get(i).setTranslateY(450+(i*40));
+        }
+        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX()-5);
+        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY()-5);
+
+        // Ball
+        Ball ball = new Ball();
+        ball.getBody().setTranslateX(150);
+        ball.getBody().setTranslateY(300);
+        ballList.add(ball);
+
+        // Coin
+        Coin coin = new Coin();
+        coin.getBody().setTranslateX(250);
+        coin.getBody().setTranslateY(300);
+        coinList.add(coin);
+
+        // Block
+        Block block1 = new Block();
+        block1.getBody().setTranslateX(0);
+        block1.getBody().setTranslateY(50);
+        blockList.add(block1);
+
+        Block block2 = new Block();
+        block2.getBody().setTranslateX(100);
+        block2.getBody().setTranslateY(50);
+        blockList.add(block2);
+
+        Block block3 = new Block();
+        block3.getBody().setTranslateX(200);
+        block3.getBody().setTranslateY(50);
+        blockList.add(block3);
+
+        Block block4 = new Block();
+        block4.getBody().setTranslateX(300);
+        block4.getBody().setTranslateY(50);
+        blockList.add(block4);
+
+        // Destroy Block
+        DestroyBlock dblock = new DestroyBlock();
+        dblock.getBody().setTranslateX(350);
+        dblock.getBody().setTranslateY(350);
+        destroyBlockList.add(dblock);
+
+        // Magnet
+        Magnet magnet = new Magnet();
+        magnet.getBody().setTranslateX(450);
+        magnet.getBody().setTranslateY(300);
+        magnetList.add(magnet);
+
+        // Shield
+        Shield shield = new Shield();
+        shield.getBody().setTranslateX(50);
+        shield.getBody().setTranslateY(200);
+        shieldList.add(shield);
+
+        // Wall
+        Wall wall = new Wall();
+        wall.getBody().setTranslateX(200);
+        wall.getBody().setTranslateY(150);
+        wallList.add(wall);
+
+        Wall wall2 = new Wall();
+        wall2.getBody().setTranslateX(400);
+        wall2.getBody().setTranslateY(150);
+        wallList.add(wall2);
+
+        for (Circle c: snake.getSnakeBody()
+        ) {
+            root.getChildren().add(c);
+        }
+
+        for (Ball b: ballList
+        ) {
+            if(b.isAlive())
+                root.getChildren().add(b.getBody());
+        }
+
+        for (Coin c: coinList
+        ) {
+            if(c.isAlive())
+                root.getChildren().add(c.getBody());
+        }
+
+        for (Block b: blockList
+        ) {
+            if(b.isAlive())
+                root.getChildren().add(b.getBody());
+        }
+
+        for (DestroyBlock db: destroyBlockList
+        ) {
+            if(db.isAlive())
+                root.getChildren().add(db.getBody());
+        }
+
+        for (Magnet m: magnetList
+        ) {
+            if(m.isAlive())
+                root.getChildren().add(m.getBody());
+        }
+
+        for (Shield s: shieldList
+        ) {
+            if(s.isAlive())
+                root.getChildren().add(s.getBody());
+        }
+
+        for (Wall w: wallList
+        ) {
+            root.getChildren().add(w.getBody());
+        }
+
+        root.getChildren().addAll(topBar, layout, label, label1, scoreLabel, snake.getSnakePane(), lengthLabel);
+
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (sceneIndicator.equals("Game")) {
+                    try {
+                        update();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -559,8 +900,9 @@ public class Main extends Application{
     /**
      * A function to handle whatever option is chosen from the drop down menu in the game.
      * @param choiceBox The drop down menu.
+     * @throws IOException
      */
-    private void getChoice(ChoiceBox<String> choiceBox) {
+    private void getChoice(ChoiceBox<String> choiceBox) throws IOException {
         Main.pauseClicked.play();
         String option = choiceBox.getValue();
         if (option.equals("Start Again")) {
@@ -649,8 +991,9 @@ public class Main extends Application{
     /**
      * A function to display the game over page where the final score is shown.
      * @return The pane used throughout the game.
+     * @throws IOException
      */
-    private Parent gameOverPageContent() {
+    private Parent gameOverPageContent() throws IOException {
         root = new Pane();
         root.setPrefSize(500, 900);
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
@@ -673,6 +1016,12 @@ public class Main extends Application{
         mainMenuBtn.setTranslateY(10);
 
         root.getChildren().addAll(label, label2, mainMenuBtn);
+
+        score = 0;
+        snake.setLength(3);
+
+        serializeLength(snake.getLength());
+        serializeScore(score);
 
         MainMenuBtnHandlerClass mainMenuBtnHandler = new MainMenuBtnHandlerClass();
         mainMenuBtn.setOnAction(mainMenuBtnHandler);
@@ -700,8 +1049,9 @@ public class Main extends Application{
     /**
      * The function that checks and updates the status of each game object.
      * @throws ConcurrentModificationException
+     * @throws IOException
      */
-    private void update() throws ConcurrentModificationException {
+    private void update() throws ConcurrentModificationException, IOException {
         t += 0.016;
 
         if (blockEncountered) {
@@ -727,10 +1077,6 @@ public class Main extends Application{
                 magnetEncountered = false;
             }
         }
-
-//        snake.updateLengthText();
-//        snake.getLengthText().setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
-//        snake.getLengthText().setTranslateY(snake.getSnakeBody().get(0).getTranslateY());
 
         // Move snake
         scene.setOnKeyPressed(event -> {
@@ -786,6 +1132,7 @@ public class Main extends Application{
                 b.getBody().setVisible(false);
 
                 snake.setLength(snake.getLength() + b.getValue());
+                serializeLength(snake.getLength());
                 for (int i=snake.getSnakeBody().size();i<snake.getLength();i++){
                     snake.getSnakeBody().add(new Circle(20, Paint.valueOf("BLUE")));
                     snake.getSnakeBody().get(i).setTranslateX(snake.getSnakeBody().get(0).getTranslateX());
@@ -825,6 +1172,7 @@ public class Main extends Application{
                 c.setAlive(false);
                 c.getBody().setVisible(false);
                 score+=c.getValue();
+                serializeScore(score);
                 scoreLabel.setText(Integer.toString(score));
                 coinList.remove(c);
             }
@@ -867,8 +1215,10 @@ public class Main extends Application{
                         if (b.getValue() > 5)
                             blockEncountered = true;
                         score += b.getValue();
+                        serializeScore(score);
                         scoreLabel.setText(Integer.toString(score));
                         snake.setLength(snake.getLength() - b.getValue());
+                        serializeLength(snake.getLength());
                         blockList.remove(b);
                         System.out.println("Snake Length = "+snake.getLength());
                         double locX = snake.getSnakeBody().get(0).getTranslateX();
@@ -901,6 +1251,7 @@ public class Main extends Application{
                 }
                 else {
                     score += b.getValue();
+                    serializeScore(score);
                     scoreLabel.setText(Integer.toString(score));
                     blockList.remove(b);
                     b.setAlive(false);
@@ -934,6 +1285,7 @@ public class Main extends Application{
                 for (Block b: blockList
                 ) {
                     score += b.getValue();
+                    serializeScore(score);
                     scoreLabel.setText(Integer.toString(score));
                     b.setAlive(false);
                     b.getBody().setVisible(false);
@@ -1168,20 +1520,21 @@ public class Main extends Application{
      */
     class StartBtnHandlerClass implements EventHandler<ActionEvent> {
         @Override
-        public void handle(ActionEvent e) {
+        public void handle(ActionEvent e){
             Main.buttonClick.play();
-            createGameContent();
-            scene = new Scene(createGameContent());
+            try {
+                createGameContent();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            try {
+                scene = new Scene(createGameContent());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             sceneIndicator = "Game";
             stage.setScene(scene);
             stage.show();
-
-//            scene.setOnKeyPressed(event -> {
-//                switch(event.getCode()) {
-//                    case LEFT: snake.moveLeft(); break;
-//                    case RIGHT: snake.moveRight(); break;
-//                }
-//            });
         }
     }
 
@@ -1192,7 +1545,23 @@ public class Main extends Application{
         @Override
         public void handle(ActionEvent e) {
             Main.buttonClick.play();
-            System.out.println("Resume button clicked");
+            try {
+                createResumeGameContent();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+            try {
+                scene = new Scene(createResumeGameContent());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+            sceneIndicator = "ResumeGame";
+            stage.setScene(scene);
+            stage.show();
         }
     }
 

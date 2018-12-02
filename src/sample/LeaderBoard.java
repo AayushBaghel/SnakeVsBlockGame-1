@@ -1,12 +1,13 @@
 package sample;
 
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * This class is used to create individual entries in the leader board.
  */
-public class LeaderBoard {
+public class LeaderBoard  implements Serializable {
 
     /**
      * The score of the player.

@@ -51,6 +51,23 @@ public class Snake {
     }
 
     /**
+     * A constructor that creates the initial snake with a specified length.
+     * @param length Length of the snake.
+     */
+    Snake(int length) {
+        snakeBody = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            snakeBody.add(new Circle(20, Paint.valueOf("BLUE")));
+            body.getChildren().add(snakeBody.get(i));
+        }
+        this.length = length;
+        updateLengthText();
+
+        body.getChildren().add(lengthText);
+        body.setAlignment(Pos.CENTER);
+    }
+
+    /**
      * A function that moves all the balls of the snake left.
      */
     void moveLeft() {
