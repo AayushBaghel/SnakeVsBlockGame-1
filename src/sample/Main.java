@@ -681,7 +681,7 @@ public class Main extends Application {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private Parent createResumeGameContent() throws IOException, ClassNotFoundException {
+    private Parent createResumeGameContent() {
         ballList.clear();
         blockList.clear();
         destroyBlockList.clear();
@@ -696,7 +696,7 @@ public class Main extends Application {
             score = 0;
         }
 
-        t = 0;
+//        t = 0;
 
         try {
             snake.setLength(deserialzeLength());
@@ -770,7 +770,7 @@ public class Main extends Application {
         // Snake code
         snake = new Snake(x);
 
-        // Setting snake head location
+        // Setting snake body position
         for(int i=0;i<snake.getLength();i++){
             snake.getSnakeBody().get(i).setTranslateX(250);
             snake.getSnakeBody().get(i).setTranslateY(450+(i*40));
@@ -891,7 +891,7 @@ public class Main extends Application {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (sceneIndicator.equals("Game")) {
+                if (sceneIndicator.equals("ResumeGame")) {
                     try {
                         update();
                     } catch (IOException e) {
@@ -1554,20 +1554,8 @@ public class Main extends Application {
         @Override
         public void handle(ActionEvent e) {
             Main.buttonClick.play();
-            try {
-                createResumeGameContent();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-            }
-            try {
-                scene = new Scene(createResumeGameContent());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-            }
+            createResumeGameContent();
+            scene = new Scene(createResumeGameContent());
             sceneIndicator = "ResumeGame";
             stage.setScene(scene);
             stage.show();
