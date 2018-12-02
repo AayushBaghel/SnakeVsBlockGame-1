@@ -369,6 +369,7 @@ public class Main extends Application {
 
         root.setStyle("-fx-background-color: #FF007F; -fx-font-family: \"Courier New\";");
 
+        Main.Crabrave.setCycleCount(MediaPlayer.INDEFINITE);
         Main.Crabrave.play();
         Label label = new Label("Snake\n v/s\nBlock");
         label.setFont(new Font("Courier New Bold", 86));
@@ -975,12 +976,14 @@ public class Main extends Application {
         root.setPrefSize(500, 900);
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
+        Main.leaderboardSound.setCycleCount(MediaPlayer.INDEFINITE);
         Main.leaderboardSound.play();
         Label label = new Label("Leader Board");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
-        label.setFont(new Font("Courier New", 40));
-        label.setTextFill(Color.WHITE);
+        label.setFont(new Font("Courier New", 50));
+        label.setStyle("-fx-font-weight: bold");
+        label.setTextFill(Color.MISTYROSE);
 
         Button mainMenuBtn = new Button("<- Main Menu");
         mainMenuBtn.setStyle("-fx-background-color: palevioletred; -fx-text-fill: white;");
