@@ -20,7 +20,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import sun.security.util.Length;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -45,7 +44,8 @@ import java.util.Random;
  *
  * The game also includes walls which are impenetrable and immovable objects.
  *
- * @author Jaspreet Singh Marwah, Aayush Baghel
+ * @author Jaspreet Singh Marwah
+ * @author Aayush Baghel
  * @since 2018-11-01
  *
  */
@@ -340,10 +340,10 @@ public class Main extends Application {
                 if (i == LeaderBoard.size() - 1)
                     LeaderBoard.add(i+1, playerInfo);
                 else
-                    if (LeaderBoard.get(i).getScore() > score) continue;
+                if (LeaderBoard.get(i).getScore() > score) continue;
 
-                    else
-                        LeaderBoard.add(i, playerInfo);
+                else
+                    LeaderBoard.add(i, playerInfo);
                 serializeLeaderBoard(LeaderBoard);
                 return;
             }
@@ -399,7 +399,7 @@ public class Main extends Application {
         Main.intro.setCycleCount(MediaPlayer.INDEFINITE);
         Main.intro.play();
 
-        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
+        root.setStyle("-fx-background-color: #000000; -fx-font-family: \"Courier New\";");
 
         Label label = new Label("Snake Vs Block");
         label.setFont(new Font("Courier New", 50));
@@ -1214,6 +1214,8 @@ public class Main extends Application {
                         Main.magnetTaken.stop();
                         Main.destroyBlockTaken.stop();
                         Main.gameover.play();
+                        snake.getLengthText().setVisible(false);
+                        score+=snake.getLength();
                         InsertIntoLeaderBoard();
                         scene = new Scene(gameOverPageContent());
                         sceneIndicator = "GameOver";
@@ -1372,7 +1374,7 @@ public class Main extends Application {
         if (ballProb <= 2) {
             Ball ball = new Ball();
             ball.getBody().setTranslateX(random.nextInt(440) + 30);
-            ball.getBody().setTranslateY(random.nextInt(400) + 30);
+            ball.getBody().setTranslateY(75);
             ballList.add(ball);
             root.getChildren().add(ball.getBody());
         }
@@ -1382,7 +1384,7 @@ public class Main extends Application {
         if (coinProb <= 2) {
             Coin coin = new Coin();
             coin.getBody().setTranslateX(random.nextInt(440) + 30);
-            coin.getBody().setTranslateY(random.nextInt(400) + 30);
+            coin.getBody().setTranslateY(75);
             coinList.add(coin);
             root.getChildren().add(coin.getBody());
         }
