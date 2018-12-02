@@ -119,7 +119,7 @@ public class Main extends Application {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static int deserialzeScore() throws IOException, ClassNotFoundException {
+    public static int deserializeScore() throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {
             in = new ObjectInputStream(new FileInputStream("ScoreOut.txt"));
@@ -690,7 +690,7 @@ public class Main extends Application {
         shieldList.clear();
         wallList.clear();
         try {
-            score = deserialzeScore();
+            score = deserializeScore();
         } catch (IOException e) {
             score = 0;
         } catch (ClassNotFoundException e) {
