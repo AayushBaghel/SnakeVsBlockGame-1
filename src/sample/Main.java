@@ -395,6 +395,7 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(500, 900);
 
+        Main.intro.stop();
         Main.intro.setCycleCount(MediaPlayer.INDEFINITE);
         Main.intro.play();
 
