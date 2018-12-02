@@ -1168,6 +1168,31 @@ public class Main extends Application {
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()+powerup)  {
                 b.setAlive(false);
                 b.getBody().setVisible(false);
+                ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
+                img.setFitHeight(30);
+                img.setFitWidth(30);
+                img.setTranslateX(b.getBody().getTranslateX());
+                img.setTranslateY(b.getBody().getTranslateY());
+                root.getChildren().add(img);
+                Timer animTimer = new Timer();
+                animTimer.scheduleAtFixedRate(new TimerTask() {
+                    int i=0;
+                    @Override
+                    public void run() {
+                        if(i<10){
+                            img.setFitHeight(img.getFitHeight()+4);
+                            img.setFitWidth(img.getFitWidth()+4);
+                            img.setTranslateX(img.getTranslateX()-2);
+                            img.setTranslateY(img.getTranslateY()-2);
+                        }
+                        else{
+                            img.setVisible(false);
+                            root.getChildren().remove(img);
+                            this.cancel();
+                        }
+                        i++;
+                    }
+                }, 15,25);
 
                 snake.setLength(snake.getLength() + b.getValue());
                 serializeLength(snake.getLength());
@@ -1209,6 +1234,31 @@ public class Main extends Application {
                 Main.coinTaken.play();
                 c.setAlive(false);
                 c.getBody().setVisible(false);
+                ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
+                img.setFitHeight(30);
+                img.setFitWidth(30);
+                img.setTranslateX(c.getBody().getTranslateX());
+                img.setTranslateY(c.getBody().getTranslateY());
+                root.getChildren().add(img);
+                Timer animTimer = new Timer();
+                animTimer.scheduleAtFixedRate(new TimerTask() {
+                    int i=0;
+                    @Override
+                    public void run() {
+                        if(i<10){
+                            img.setFitHeight(img.getFitHeight()+4);
+                            img.setFitWidth(img.getFitWidth()+4);
+                            img.setTranslateX(img.getTranslateX()-2);
+                            img.setTranslateY(img.getTranslateY()-2);
+                        }
+                        else{
+                            img.setVisible(false);
+                            root.getChildren().remove(img);
+                            this.cancel();
+                        }
+                        i++;
+                    }
+                }, 15,25);
                 score+=c.getValue();
                 serializeScore(score);
                 scoreLabel.setText(Integer.toString(score));
@@ -1318,9 +1368,34 @@ public class Main extends Application {
                     score += b.getValue();
                     serializeScore(score);
                     scoreLabel.setText(Integer.toString(score));
-                    blockList.remove(b);
                     b.setAlive(false);
                     b.getBody().setVisible(false);
+                    ImageView img = new ImageView(Main.class.getResource("/ex2.png").toString());
+                    img.setFitHeight(100);
+                    img.setFitWidth(100);
+                    img.setTranslateX(b.getBody().getTranslateX());
+                    img.setTranslateY(b.getBody().getTranslateY());
+                    root.getChildren().add(img);
+                    Timer animTimer = new Timer();
+                    animTimer.scheduleAtFixedRate(new TimerTask() {
+                        int i=0;
+                        @Override
+                        public void run() {
+                            if(i<10){
+                                img.setFitHeight(img.getFitHeight()+10);
+                                img.setFitWidth(img.getFitWidth()+10);
+                                img.setTranslateX(img.getTranslateX()-5);
+                                img.setTranslateY(img.getTranslateY()-5);
+                            }
+                            else{
+                                img.setVisible(false);
+                                root.getChildren().remove(img);
+                                this.cancel();
+                            }
+                            i++;
+                        }
+                    }, 15,25);
+                    blockList.remove(b);
                 }
 
             }
@@ -1345,6 +1420,31 @@ public class Main extends Application {
                     snake.getSnakeBody().get(0).getTranslateX()<=db.getBody().getTranslateX()+db.getBody().getWidth()){
                 Main.destroyBlockTaken.play();
                 db.getBody().setVisible(false);
+                ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
+                img.setFitHeight(40);
+                img.setFitWidth(40);
+                img.setTranslateX(db.getBody().getTranslateX());
+                img.setTranslateY(db.getBody().getTranslateY());
+                root.getChildren().add(img);
+                Timer animTimer = new Timer();
+                animTimer.scheduleAtFixedRate(new TimerTask() {
+                    int i=0;
+                    @Override
+                    public void run() {
+                        if(i<10){
+                            img.setFitHeight(img.getFitHeight()+4);
+                            img.setFitWidth(img.getFitWidth()+4);
+                            img.setTranslateX(img.getTranslateX()-2);
+                            img.setTranslateY(img.getTranslateY()-2);
+                        }
+                        else{
+                            img.setVisible(false);
+                            root.getChildren().remove(img);
+                            this.cancel();
+                        }
+                        i++;
+                    }
+                }, 15,25);
                 db.setAlive(false);
                 destroyBlockList.remove(db);
 
@@ -1356,7 +1456,6 @@ public class Main extends Application {
                     b.setAlive(false);
                     b.getBody().setVisible(false);
                 }
-
                 blockList.clear();
             }
         }
@@ -1378,6 +1477,31 @@ public class Main extends Application {
                 tMagnet = 0;
                 m.getBody().setVisible(false);
                 m.setAlive(false);
+                ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
+                img.setFitHeight(40);
+                img.setFitWidth(40);
+                img.setTranslateX(m.getBody().getTranslateX());
+                img.setTranslateY(m.getBody().getTranslateY());
+                root.getChildren().add(img);
+                Timer animTimer = new Timer();
+                animTimer.scheduleAtFixedRate(new TimerTask() {
+                    int i=0;
+                    @Override
+                    public void run() {
+                        if(i<10){
+                            img.setFitHeight(img.getFitHeight()+4);
+                            img.setFitWidth(img.getFitWidth()+4);
+                            img.setTranslateX(img.getTranslateX()-2);
+                            img.setTranslateY(img.getTranslateY()-2);
+                        }
+                        else{
+                            img.setVisible(false);
+                            root.getChildren().remove(img);
+                            this.cancel();
+                        }
+                        i++;
+                    }
+                }, 15,25);
                 magnetList.remove(m);
             }
         }
@@ -1398,6 +1522,31 @@ public class Main extends Application {
                 tShield = 0;
                 s.getBody().setVisible(false);
                 s.setAlive(false);
+                ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
+                img.setFitHeight(40);
+                img.setFitWidth(40);
+                img.setTranslateX(s.getBody().getTranslateX());
+                img.setTranslateY(s.getBody().getTranslateY());
+                root.getChildren().add(img);
+                Timer animTimer = new Timer();
+                animTimer.scheduleAtFixedRate(new TimerTask() {
+                    int i=0;
+                    @Override
+                    public void run() {
+                        if(i<10){
+                            img.setFitHeight(img.getFitHeight()+4);
+                            img.setFitWidth(img.getFitWidth()+4);
+                            img.setTranslateX(img.getTranslateX()-2);
+                            img.setTranslateY(img.getTranslateY()-2);
+                        }
+                        else{
+                            img.setVisible(false);
+                            root.getChildren().remove(img);
+                            this.cancel();
+                        }
+                        i++;
+                    }
+                }, 15,25);
                 shieldList.remove(s);
             }
         }
