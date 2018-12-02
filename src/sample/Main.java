@@ -1132,6 +1132,17 @@ public class Main extends Application {
         });
 
         int snekLen = snake.getLength();
+        double extraSpeed = snekLen/5.0;
+
+        if (extraSpeed > 1.5) {
+            extraSpeed = 1.5;
+        }
+        else if (extraSpeed >= 0.5) {
+            extraSpeed = 0.5;
+        }
+        else {
+            extraSpeed = 0;
+        }
 
         // Move objects and check if they collide with snake
         for (Ball b: ballList
@@ -1142,7 +1153,7 @@ public class Main extends Application {
 
             if(b.isAlive()){
                 if (!blockEncountered)
-                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -1182,7 +1193,7 @@ public class Main extends Application {
 
             if(c.isAlive()){
                 if (!blockEncountered)
-                    c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                    c.getBody().setTranslateY(c.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
             }
             else{
                 c.getBody().setVisible(false);
@@ -1214,7 +1225,7 @@ public class Main extends Application {
             }
             if(b.isAlive()){
                 if (!blockEncountered)
-                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                    b.getBody().setTranslateY(b.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
             }
             else{
                 b.getBody().setVisible(false);
@@ -1314,6 +1325,7 @@ public class Main extends Application {
 
             }
         }
+
         for (DestroyBlock db: destroyBlockList
         ) {
             if(db.getBody().getTranslateY() > 899) {
@@ -1321,7 +1333,7 @@ public class Main extends Application {
             }
             if(db.isAlive()){
                 if (!blockEncountered)
-                    db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                    db.getBody().setTranslateY(db.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
             }
             else{
                 db.getBody().setVisible(false);
@@ -1356,7 +1368,7 @@ public class Main extends Application {
                 magnetList.remove(m);
             }
             if (!blockEncountered)
-                m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                m.getBody().setTranslateY(m.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
             if(m.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getHeight())&&
                     m.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()-(snake.getSnakeBody().get(0).getRadius()-m.getBody().getHeight())&&
                     snake.getSnakeBody().get(0).getTranslateX()>=m.getBody().getTranslateX()-(snake.getSnakeBody().get(0).getRadius()+m.getBody().getWidth())&&
@@ -1376,7 +1388,7 @@ public class Main extends Application {
                 shieldList.remove(s);
             }
             if (!blockEncountered)
-                s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                s.getBody().setTranslateY(s.getBody().getTranslateY() + 0.5 +  + extraSpeed); //*(1+snekLen/5)
             if(s.getBody().getTranslateY()>=snake.getSnakeBody().get(0).getTranslateY()-snake.getSnakeBody().get(0).getRadius()-s.getBody().getHeight()&&
                     s.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+s.getBody().getHeight()&&
                     snake.getSnakeBody().get(0).getTranslateX()>=s.getBody().getTranslateX() &&
@@ -1403,7 +1415,7 @@ public class Main extends Application {
                 }
             }
             if (!blockEncountered)
-                w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5*(1+snekLen/5)); //*(1+snake.getLength()/5)
+                w.getBody().setTranslateY(w.getBody().getTranslateY() + 0.5 + extraSpeed); //*(1+snekLen/5)
         }
 
 
