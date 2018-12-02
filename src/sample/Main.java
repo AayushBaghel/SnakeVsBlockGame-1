@@ -312,6 +312,16 @@ public class Main extends Application {
     private static final AudioClip blockTaken = new AudioClip(Main.class.getResource("/block.wav").toString());
 
     /**
+     * Audio clip to store the sound made when we open the LeaderBoard Page.
+     */
+    private static final AudioClip leaderboardSound = new AudioClip(Main.class.getResource("/leaderboard.mp3").toString());
+
+    /**
+     * Audio clip to store the sound made when we Start the start the game window.
+     */
+    private static final AudioClip Crabrave = new AudioClip(Main.class.getResource("/Crab Rave.mp3").toString());
+
+    /**
      * A function used to make an entry into the leader board if the score is good enough.
      * @throws IOException
      */
@@ -359,6 +369,7 @@ public class Main extends Application {
 
         root.setStyle("-fx-background-color: #FF007F; -fx-font-family: \"Courier New\";");
 
+        Main.Crabrave.play();
         Label label = new Label("Snake\n v/s\nBlock");
         label.setFont(new Font("Courier New Bold", 86));
         label.setTextFill(Color.GHOSTWHITE);
@@ -393,6 +404,8 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(500, 900);
 
+        Main.leaderboardSound.stop();
+        Main.Crabrave.stop();
         Main.intro.stop();
         Main.intro.setCycleCount(MediaPlayer.INDEFINITE);
         Main.intro.play();
@@ -962,6 +975,7 @@ public class Main extends Application {
         root.setPrefSize(500, 900);
         root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
+        Main.leaderboardSound.play();
         Label label = new Label("Leader Board");
         label.layoutXProperty().bind(root.widthProperty().subtract(label.widthProperty()).divide(2));
         label.setTranslateY(100);
