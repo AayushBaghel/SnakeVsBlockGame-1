@@ -410,7 +410,7 @@ public class Main extends Application {
         Main.intro.setCycleCount(MediaPlayer.INDEFINITE);
         Main.intro.play();
 
-        root.setStyle("-fx-background-color: #000000; -fx-font-family: \"Courier New\";");
+        root.setStyle("-fx-background-color: #7851A9; -fx-font-family: \"Courier New\";");
 
         Label label = new Label("Snake Vs Block");
         label.setFont(new Font("Courier New", 50));
