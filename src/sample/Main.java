@@ -330,6 +330,7 @@ public class Main extends Application {
                 else
                     LeaderBoard.add(i, playerInfo);
                 LeaderBoard.remove(LeaderBoard.get(14));
+                serializeLeaderBoard(LeaderBoard);
                 return;
             }
         }
@@ -343,6 +344,7 @@ public class Main extends Application {
 
                     else
                         LeaderBoard.add(i, playerInfo);
+                serializeLeaderBoard(LeaderBoard);
                 return;
             }
         }
@@ -444,6 +446,13 @@ public class Main extends Application {
         LeaderBoardBtnHandlerClass LeaderBoardHandler = new LeaderBoardBtnHandlerClass();
         leaderBoardBtn.setOnAction(LeaderBoardHandler);
 
+        try {
+            LeaderBoard = deserialzeLeaderBoard();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return root;
     }
