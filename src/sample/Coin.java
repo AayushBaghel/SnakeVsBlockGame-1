@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * This is the class used to create the individual coin objects in the game.
  */
-public class Coin {
+class Coin {
 
     /**
      * The number by which the score increases when it eats this coin.
@@ -47,7 +47,7 @@ public class Coin {
      * Gives the number by which the score increases when it eats this coin.
      * @return The number by which the score increases when it eats this coin.
      */
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
@@ -55,23 +55,22 @@ public class Coin {
      * Gives the status of the coin.
      * @return The status of the coin.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     /**
      * Sets the status of the coin.
-     * @param alive The new status of the coin.
      */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    void setAlive() {
+        this.alive = false;
     }
 
     /**
      * Gives the (GUI) body of the coin.
      * @return The (GUI) body of the coin.
      */
-    public StackPane getBody() {
+    StackPane getBody() {
         return body;
     }
 }

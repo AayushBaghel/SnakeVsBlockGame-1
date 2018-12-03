@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * This class is used to create individual entries in the leader board.
  */
-public class LeaderBoard  implements Serializable {
+class LeaderBoard  implements Serializable {
 
     /**
      * The score of the player.
@@ -42,7 +42,7 @@ public class LeaderBoard  implements Serializable {
      * A function to get the score of the player.
      * @return The score the player earned.
      */
-    public int getScore() {
+    int getScore() {
         return score;
     }
 
@@ -50,7 +50,7 @@ public class LeaderBoard  implements Serializable {
      * A function to get the date and time at which this entry was made.
      * @return The date and time at which this entry was made.
      */
-    public String getDate() {
+    String getDate() {
         return date;
     }
 }

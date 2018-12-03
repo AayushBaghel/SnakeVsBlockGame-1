@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 /**
  * This is the class used to create the individual magnet objects in the game.
  */
-public class Magnet {
+class Magnet {
     /**
      * The status of the magnet.
      */
@@ -20,7 +20,7 @@ public class Magnet {
     /**
      * The constructor used to create the magnet.
      */
-    public Magnet(){
+    Magnet(){
         ImageView img = new ImageView(Main.class.getResource("/Magnet.png").toString());
         img.setFitHeight(35);
         img.setFitWidth(35);
@@ -31,23 +31,22 @@ public class Magnet {
      * Gives the status of the magnet.
      * @return The status of the magnet.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     /**
      * Sets the status of the magnet.
-     * @param alive The new status of the magnet.
      */
-    public void setAlive (boolean alive) {
-        this.alive = alive;
+    void setAlive() {
+        this.alive = false;
     }
 
     /**
      * Gives the (GUI) body of the magnet.
      * @return The (GUI) body of the magnet.
      */
-    public StackPane getBody() {
+    StackPane getBody() {
         return body;
     }
 }

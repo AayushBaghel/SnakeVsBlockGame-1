@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * This is the class used to create the individual ball objects in the game.
  */
-public class Ball {
+class Ball {
 
     /**
      * The number by which the length of the snake increases when it eats this ball.
@@ -46,7 +46,7 @@ public class Ball {
      * Gives the number by which the length of the snake increases when it eats this ball.
      * @return The number by which the length of the snake increases when it eats this ball.
      */
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
@@ -54,23 +54,22 @@ public class Ball {
      * Gives the status of the ball.
      * @return The status of the ball.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     /**
      * Sets the status of the ball.
-     * @param alive The new status of the ball.
      */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    void setAlive() {
+        this.alive = false;
     }
 
     /**
      * Gives the (GUI) body of the ball.
      * @return The (GUI) body of the ball.
      */
-    public StackPane getBody() {
+    StackPane getBody() {
         return body;
     }
 }

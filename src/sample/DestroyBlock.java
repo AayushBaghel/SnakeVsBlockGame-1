@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 /**
  * This is the class used to create the individual destroy block objects in the game.
  */
-public class DestroyBlock {
+class DestroyBlock {
     /**
      * The status of the destroy block.
      */
@@ -20,7 +20,7 @@ public class DestroyBlock {
     /**
      * The constructor used to create the destroy block.
      */
-    public DestroyBlock(){
+    DestroyBlock(){
         ImageView img = new ImageView(Main.class.getResource("/DestroyBlocks.png").toString());
         img.setFitHeight(35);
         img.setFitWidth(35);
@@ -31,23 +31,22 @@ public class DestroyBlock {
      * Gives the status of the destroy block.
      * @return The status of the destroy block.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     /**
      * Sets the status of the destroy block.
-     * @param alive The new status of the destroy block.
      */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    void setAlive() {
+        this.alive = false;
     }
 
     /**
      * Gives the (GUI) body of the destroy block.
      * @return The (GUI) body of the destroy block.
      */
-    public StackPane getBody() {
+    StackPane getBody() {
         return body;
     }
 }

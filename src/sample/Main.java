@@ -53,93 +53,70 @@ public class Main extends Application {
     /**
      * Saves the current state of the leader board in an external file.
      * @param LeaderBoard A list that contains the leader board.
-     * @throws IOException
+     * @throws IOException Input Output Exception
      */
-    public static void serializeLeaderBoard(List<LeaderBoard> LeaderBoard) throws IOException {
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream( new FileOutputStream("LeaderBoardOut.txt"));
+    private static void serializeLeaderBoard(List<LeaderBoard> LeaderBoard) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LeaderBoardOut.txt"))) {
             out.writeObject(LeaderBoard);
-        } finally {
-            out.close();
         }
     }
 
     /**
      * Saves the current score in an external file.
      * @param Score The current score.
-     * @throws IOException
+     * @throws IOException Input Output Exception
      */
-    public static void serializeScore(int Score) throws IOException {
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream( new FileOutputStream("ScoreOut.txt"));
+    private static void serializeScore(int Score) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("ScoreOut.txt"))) {
             out.writeObject(Score);
-        } finally {
-            out.close();
         }
     }
 
     /**
      * Saves the current length of the snake in an external file.
      * @param Length The current length of the snake.
-     * @throws IOException
+     * @throws IOException Input Output exception
      */
-    public static void serializeLength(int Length) throws IOException {
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream( new FileOutputStream("LengthOut.txt"));
+    private static void serializeLength(int Length) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("LengthOut.txt"))) {
             out.writeObject(Length);
-        } finally {
-            out.close();
         }
     }
 
     /**
      * Retrieves the last saved state of the leader board.
      * @return The last saved state of the leader board.
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException Input output exception
+     * @throws ClassNotFoundException Class not found exception
      */
-    public static List<LeaderBoard> deserialzeLeaderBoard() throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream("LeaderBoardOut.txt"));
+    private static List<LeaderBoard> deserializeLeaderBoard() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("LeaderBoardOut.txt"))) {
+            //noinspection unchecked
             return (List<LeaderBoard>) in.readObject();
-        } finally {
-            in.close();
         }
     }
 
     /**
      * Retrieves the last saved state of the score.
      * @return The last saved state of the score.
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException Input output exception
+     * @throws ClassNotFoundException Class not found exception
      */
-    public static int deserializeScore() throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream("ScoreOut.txt"));
+    private static int deserializeScore() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("ScoreOut.txt"))) {
             return (int) in.readObject();
-        } finally {
-            in.close();
         }
     }
 
     /**
      * Retrieves the last saved state of the snake length.
      * @return The last saved state of the snake length.
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException Input output exception
+     * @throws ClassNotFoundException Class not found exception
      */
-    public static int deserialzeLength() throws IOException, ClassNotFoundException {
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream("LengthOut.txt"));
+    private static int deserializeLength() throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("LengthOut.txt"))) {
             return (int) in.readObject();
-        } finally {
-            in.close();
         }
     }
 
@@ -323,7 +300,7 @@ public class Main extends Application {
 
     /**
      * A function used to make an entry into the leader board if the score is good enough.
-     * @throws IOException
+     * @throws IOException Input output exception
      */
     private void InsertIntoLeaderBoard() throws IOException {
         LeaderBoard playerInfo = new LeaderBoard(score);
@@ -460,10 +437,8 @@ public class Main extends Application {
         leaderBoardBtn.setOnAction(LeaderBoardHandler);
 
         try {
-            LeaderBoard = deserialzeLeaderBoard();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            LeaderBoard = deserializeLeaderBoard();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -473,7 +448,7 @@ public class Main extends Application {
     /**
      * A function to create the setup for the main game.
      * @return The pane used throughout the game.
-     * @throws IOException
+     * @throws IOException Input output exception
      */
     private Parent createGameContent() throws IOException {
         ballList.clear();
@@ -690,9 +665,7 @@ public class Main extends Application {
 
     /**
      * A function to create the setup for the main game when the player wants to resume their previous game.
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @return The pane used throughout the program
      */
     private Parent createResumeGameContent() {
         ballList.clear();
@@ -703,19 +676,15 @@ public class Main extends Application {
         wallList.clear();
         try {
             score = deserializeScore();
-        } catch (IOException e) {
-            score = 0;
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             score = 0;
         }
 
 //        t = 0;
 
         try {
-            snake.setLength(deserialzeLength());
-        } catch (IOException e) {
-            snake.setLength(3);
-        } catch (ClassNotFoundException e) {
+            snake.setLength(deserializeLength());
+        } catch (IOException | ClassNotFoundException e) {
             snake.setLength(3);
         }
 
@@ -922,7 +891,7 @@ public class Main extends Application {
     /**
      * A function to handle whatever option is chosen from the drop down menu in the game.
      * @param choiceBox The drop down menu.
-     * @throws IOException
+     * @throws IOException Input output exception
      */
     private void getChoice(ChoiceBox<String> choiceBox) throws IOException {
         Main.pauseClicked.play();
@@ -1016,7 +985,7 @@ public class Main extends Application {
     /**
      * A function to display the game over page where the final score is shown.
      * @return The pane used throughout the game.
-     * @throws IOException
+     * @throws IOException Input output exception
      */
     private Parent gameOverPageContent() throws IOException {
         root = new Pane();
@@ -1073,8 +1042,8 @@ public class Main extends Application {
 
     /**
      * The function that checks and updates the status of each game object.
-     * @throws ConcurrentModificationException
-     * @throws IOException
+     * @throws ConcurrentModificationException Concurrent modification exception
+     * @throws IOException Input output exception
      */
     private void update() throws ConcurrentModificationException, IOException {
         t += 0.016;
@@ -1166,7 +1135,7 @@ public class Main extends Application {
                     b.getBody().getTranslateY()<=snake.getSnakeBody().get(0).getTranslateY()+snake.getSnakeBody().get(0).getRadius()+b.getBody().getHeight()+powerup &&
                     snake.getSnakeBody().get(0).getTranslateX()+powerup>=b.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=b.getBody().getTranslateX()+b.getBody().getWidth()+powerup)  {
-                b.setAlive(false);
+                b.setAlive();
                 b.getBody().setVisible(false);
                 ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
                 img.setFitHeight(30);
@@ -1232,7 +1201,7 @@ public class Main extends Application {
                     snake.getSnakeBody().get(0).getTranslateX()+powerup>=c.getBody().getTranslateX()&&
                     snake.getSnakeBody().get(0).getTranslateX()<=c.getBody().getTranslateX()+c.getBody().getWidth()+powerup) {
                 Main.coinTaken.play();
-                c.setAlive(false);
+                c.setAlive();
                 c.getBody().setVisible(false);
                 ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
                 img.setFitHeight(30);
@@ -1335,7 +1304,7 @@ public class Main extends Application {
                         lengthLabel.setText(Integer.toString(snake.getLength()));
                         snake.updateLengthText();
                     }
-                    b.setAlive(false);
+                    b.setAlive();
                     b.getBody().setVisible(false);
                     ImageView img = new ImageView(Main.class.getResource("/ex2.png").toString());
                     img.setFitHeight(100);
@@ -1368,7 +1337,7 @@ public class Main extends Application {
                     score += b.getValue();
                     serializeScore(score);
                     scoreLabel.setText(Integer.toString(score));
-                    b.setAlive(false);
+                    b.setAlive();
                     b.getBody().setVisible(false);
                     ImageView img = new ImageView(Main.class.getResource("/ex2.png").toString());
                     img.setFitHeight(100);
@@ -1445,7 +1414,7 @@ public class Main extends Application {
                         i++;
                     }
                 }, 15,25);
-                db.setAlive(false);
+                db.setAlive();
                 destroyBlockList.remove(db);
 
                 for (Block b: blockList
@@ -1453,7 +1422,7 @@ public class Main extends Application {
                     score += b.getValue();
                     serializeScore(score);
                     scoreLabel.setText(Integer.toString(score));
-                    b.setAlive(false);
+                    b.setAlive();
                     b.getBody().setVisible(false);
                 }
                 blockList.clear();
@@ -1476,7 +1445,7 @@ public class Main extends Application {
                 magnetEncountered = true;
                 tMagnet = 0;
                 m.getBody().setVisible(false);
-                m.setAlive(false);
+                m.setAlive();
                 ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
                 img.setFitHeight(40);
                 img.setFitWidth(40);
@@ -1521,7 +1490,7 @@ public class Main extends Application {
                 shieldEncountered = true;
                 tShield = 0;
                 s.getBody().setVisible(false);
-                s.setAlive(false);
+                s.setAlive();
                 ImageView img = new ImageView(Main.class.getResource("/firework.png").toString());
                 img.setFitHeight(40);
                 img.setFitWidth(40);

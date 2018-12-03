@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This is the class used to create the snake that the player controls.
  */
-public class Snake {
+class Snake {
 
     /**
      * The length of the snake.
@@ -96,7 +96,7 @@ public class Snake {
     /**
      * A function used to update the value stored in the length label.
      */
-    public void updateLengthText() {
+    void updateLengthText() {
         lengthText.setText(Integer.toString(length));
     }
 
@@ -104,7 +104,7 @@ public class Snake {
      * A function used to get the value stored in the length label.
      * @return The value stored in the length label.
      */
-    public Text getLengthText() {
+    Text getLengthText() {
         return lengthText;
     }
 
@@ -112,7 +112,7 @@ public class Snake {
      * A function used to set the new length of the snake.
      * @param length The new length of the snake.
      */
-    public void setLength(int length) {
+    void setLength(int length) {
         this.length = length;
     }
 
@@ -120,7 +120,7 @@ public class Snake {
      * A function to get the current length of the snake.
      * @return The current length of the snake.
      */
-    public int getLength() {
+    int getLength() {
         return length;
     }
 
@@ -128,7 +128,7 @@ public class Snake {
      * A function to get the list of the individual circles that the snake is comprised of.
      * @return The list of the individual circles that the snake is comprised of.
      */
-    public List<Circle> getSnakeBody() {
+    List<Circle> getSnakeBody() {
         return snakeBody;
     }
 
@@ -137,5 +137,5 @@ public class Snake {
      * displayed.
      * @return The stack pane in which all the circles of the snake body as well as the snake's length are be displayed.
      */
-    public StackPane getSnakePane() { return body; }
+    StackPane getSnakePane() { return body; }
 }

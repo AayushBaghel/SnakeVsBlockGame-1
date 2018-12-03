@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * This is the class used to create the individual block objects in the game.
  */
-public class Block {
+class Block {
 
     /**
      * The number by which the score increases and the length of the snake deceases when it eats this ball.
@@ -37,7 +37,7 @@ public class Block {
         value = r.nextInt(8) + 1;
 
         Rectangle rect = new Rectangle(100, 100);
-        rect = defineBody(rect);
+        defineBody(rect);
 
         body.getChildren().add(rect);
         Text txt = new Text(Integer.toString(value));
@@ -56,7 +56,7 @@ public class Block {
         value = r.nextInt(i-1) + 1;
 
         Rectangle rect = new Rectangle(100, 100);
-        rect = defineBody(rect);
+        defineBody(rect);
 
         body.getChildren().add(rect);
         Text txt = new Text(Integer.toString(value));
@@ -68,9 +68,8 @@ public class Block {
     /**
      * A function That sets the size and color of the block.
      * @param body The body of the block.
-     * @return The body of the block.
      */
-    private Rectangle defineBody(Rectangle body) {
+    private void defineBody(Rectangle body) {
         body.setArcHeight(40);
         body.setArcWidth(40);
 
@@ -88,14 +87,14 @@ public class Block {
 
         body.setFill(color);
 
-        return body;
+//        return body;
     }
 
     /**
      * Gives the number by which the score increases and the length of the snake decreases when it eats this block.
      * @return The number by which the score increases and the length of the snake decreases when it eats this block.
      */
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
@@ -103,23 +102,22 @@ public class Block {
      * Gives the status of the block.
      * @return The status of the block.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
     /**
      * Sets the status of the block.
-     * @param alive The new status of the block.
      */
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    void setAlive() {
+        this.alive = false;
     }
 
     /**
      * Gives the (GUI) body of the block.
      * @return The (GUI) body of the block.
      */
-    public StackPane getBody() {
+    StackPane getBody() {
         return body;
     }
 }

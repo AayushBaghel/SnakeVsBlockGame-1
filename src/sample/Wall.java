@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 /**
  * This is the class used to create the individual wall objects in the game.
  */
-public class Wall {
+class Wall {
 
     /**
      * The body (GUI part) of the wall.
@@ -16,7 +16,7 @@ public class Wall {
     /**
      * The constructor used to create the shield.
      */
-    public Rectangle getBody() {
+    Rectangle getBody() {
         return body;
     }
 }
